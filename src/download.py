@@ -11,21 +11,19 @@ def data_writing(file_path, data, mode="w"):
 
     with open(file_path, mode, encoding="utf-8") as f:
         f.write(json.dumps(element) + "\n")
+        for element in data:
+          f.write(json.dumps(element) + "\n")
+
 
 # equipos
 equipos_url = "https://api.jolpi.ca/ergast/f1/current/driverStandings.json"
-equipos_data = api_requests(equipos_url)
-equipos_file_patch = "data/raw/equipos_data.json"
+equipos_data = api_request(equipos_url)
+equipos_file_path = "data/raw/equipos_data.json"
+
 
 
 data_writing(equipos_file_path, equipos_data)
-
-
-
-
-
-        for element in data:
-            f.write(json.dumps(element) + "\n")
+    
 
 # drivers
 drivers_url = "https://api.openf1.org/v1/drivers?session_key=latest"
