@@ -10,7 +10,6 @@ def data_writing(file_path, data, mode="w"):
     os.makedirs("data/raw", exist_ok=True)
 
     with open(file_path, mode, encoding="utf-8") as f:
-        f.write(json.dumps(element) + "\n")
         for element in data:
           f.write(json.dumps(element) + "\n")
 
