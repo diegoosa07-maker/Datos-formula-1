@@ -16,6 +16,6 @@ def data_writing(file_path, data, mode="w"):
             
     print(f"Se guardaron {len(data)} elementos en {file_path}")
 
-f1_url = "https://api.openf1.org/v1/sessions?year=2026&session_type=Race"
+f1_url = "https://api.openf1.org/v1/sessions?year=2025&session_type=Race"
 f1_data = api_request(f1_url)
 data_writing("data/raw/sessions_2026.json", f1_data, "w")
