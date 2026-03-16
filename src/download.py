@@ -11,9 +11,6 @@ def data_writing(file_path, data, mode="w"):
 
     with open(file_path, mode, encoding="utf-8") as f:
         for element in data:
-<<<<<<< Updated upstream
-            f.write(json.dumps(element) + "\n")
-=======
           f.write(json.dumps(element) + "\n")
 
 
@@ -26,7 +23,6 @@ equipos_file_path = "data/raw/equipos_data.json"
 
 data_writing(equipos_file_path, equipos_data)
     
->>>>>>> Stashed changes
 
 # drivers 2025
 drivers_url = "https://api.openf1.org/v1/drivers?year=2025"
