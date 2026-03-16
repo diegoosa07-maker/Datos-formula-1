@@ -14,18 +14,8 @@ def data_writing(file_path, data, mode="w"):
           f.write(json.dumps(element) + "\n")
 
 
-# equipos
-equipos_url = "https://api.jolpi.ca/ergast/f1/current/driverStandings.json"
-equipos_data = api_request(equipos_url)
-equipos_file_path = "data/raw/equipos_data.json"
-
-
-
-data_writing(equipos_file_path, equipos_data)
-    
-
 # drivers
-drivers_url = "https://api.openf1.org/v1/drivers?session_key=latest"
+drivers_url = "https://api.openf1.org/v1/drivers?session_key=9693"
 drivers_data = api_request(drivers_url)
 drivers_file_path = "data/raw/drivers_data.json"
 
