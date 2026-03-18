@@ -39,3 +39,9 @@ drivers_2024_url = "https://api.openf1.org/v1/championship_drivers?session_key=9
 drivers_2024_data = api_request(drivers_2024_url)
 drivers_2024_file_path = "data/raw/drivers_2024_data.json"
 data_writing(drivers_2024_file_path, drivers_2024_data)
+
+# Pilotos-Escuderías:
+equipos_url = "https://api.jolpi.ca/ergast/f1/current/driverStandings.json"
+equipos_data = api_request(equipos_url)
+equipos_file_path = "data/raw/equipos_data.json"
+data_writing(equipos_file_path, equipos_data)
