@@ -31,6 +31,7 @@ drivers_file_path = "data/raw/drivers_data.json"
 
 data_writing(drivers_file_path, drivers_data)
 
+<<<<<<< Updated upstream
 # resultados de carreras 2025
 sessions_url = "https://api.openf1.org/v1/sessions?year=2025&session_type=Race"
 sessions_data = api_request(sessions_url)
@@ -47,3 +48,17 @@ for session in sessions_data:
     drivers_url = f"https://api.openf1.org/v1/drivers?session_key={session_key}"
     drivers_session_data = api_request(drivers_url)
     data_writing(f"data/raw/drivers_{session_key}.json", drivers_session_data)
+=======
+# Resultados final de puntos en el año 2023
+driverspoints2023_url = "https://api.openf1.org/v1/championship_drivers?session_key=9197"
+driverspoints2023_data = api_request(driverspoints2023_url)
+driverspoints2023_file_path = "data/raw/driverspoints2023_data.json"
+
+data_writing(driverspoints2023_file_path, driverspoints2023_data)
+
+drivers2023_url = "https://api.openf1.org/v1/drivers?session_key=9197"
+drivers2023_data = api_request(drivers2023_url)
+drivers2023_file_path = "data/raw/drivers2023_data.json"
+
+data_writing(drivers2023_file_path, drivers2023_data)
+>>>>>>> Stashed changes
