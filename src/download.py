@@ -15,7 +15,7 @@ def data_writing(file_path, data, mode="w"):
 # equipos
 equipos_url = "https://api.jolpi.ca/ergast/f1/current/driverStandings.json"
 equipos_data = api_requests(equipos_url)
-equipos_file_patch = "data/raw/equipos_data.json"
+equipos_file_path = "data/raw/equipos_data.json"
 
 
 data_writing(equipos_file_path, equipos_data)

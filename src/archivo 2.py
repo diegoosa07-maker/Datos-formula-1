@@ -1,7 +1,7 @@
 import os
 import csv
-import json
-import requests
+import json 
+import requests 
 
 def json_to_csv(url, output_path):
     # 1. Obtener los datos de la URL
@@ -11,7 +11,7 @@ def json_to_csv(url, output_path):
     # 2. Navegar por el JSON hasta la lista de pilotos
     # La ruta es: MRData -> StandingsTable -> StandingsLists[0] -> DriverStandings
     try:
-        standings = data["MRData"]["StandingsTable"]["StandingsLists"][0]["DriverStandings"]
+        standings = data ["MRData"]["StandingsTable"]["StandingsLists"][0]["DriverStandings"]
     except (KeyError, IndexError):
         print("Error: No se pudo encontrar la estructura de datos en el JSON.")
         return
@@ -41,7 +41,7 @@ def json_to_csv(url, output_path):
     print(f"Archivo guardado con éxito en: {output_path}")
 
 # --- Ejecución ---
-url_f1 = "https://api.jolpi.ca/ergast/f1/current/driverStandings.json"
+url_f1 = "https://api.jolpi.ca/ergast/f1/2025/driverStandings.json"
 ruta_final = "data/clean/archivo_2.csv"
 
 json_to_csv(url_f1, ruta_final)
