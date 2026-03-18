@@ -1,11 +1,10 @@
-{"position": "1", "positionText": "1", "points": "43", "wins": "1", "Constructor": {"constructorId": "mercedes", "url": "https://en.wikipedia.org/wiki/Mercedes-Benz_in_Formula_One", "name": "Mercedes", "nationality": "German"}}
-{"position": "2", "positionText": "2", "points": "27", "wins": "0", "Constructor": {"constructorId": "ferrari", "url": "https://en.wikipedia.org/wiki/Scuderia_Ferrari", "name": "Ferrari", "nationality": "Italian"}}
-{"position": "3", "positionText": "3", "points": "10", "wins": "0", "Constructor": {"constructorId": "mclaren", "url": "https://en.wikipedia.org/wiki/McLaren", "name": "McLaren", "nationality": "British"}}
-{"position": "4", "positionText": "4", "points": "8", "wins": "0", "Constructor": {"constructorId": "red_bull", "url": "https://en.wikipedia.org/wiki/Red_Bull_Racing", "name": "Red Bull", "nationality": "Austrian"}}
-{"position": "5", "positionText": "5", "points": "6", "wins": "0", "Constructor": {"constructorId": "haas", "url": "https://en.wikipedia.org/wiki/Haas_F1_Team", "name": "Haas F1 Team", "nationality": "American"}}
-{"position": "6", "positionText": "6", "points": "4", "wins": "0", "Constructor": {"constructorId": "rb", "url": "https://en.wikipedia.org/wiki/Racing_Bulls", "name": "RB F1 Team", "nationality": "Italian"}}
-{"position": "7", "positionText": "7", "points": "2", "wins": "0", "Constructor": {"constructorId": "audi", "url": "https://en.wikipedia.org/wiki/Audi_in_Formula_One", "name": "Audi", "nationality": "German"}}
-{"position": "8", "positionText": "8", "points": "1", "wins": "0", "Constructor": {"constructorId": "alpine", "url": "https://en.wikipedia.org/wiki/Alpine_F1_Team", "name": "Alpine F1 Team", "nationality": "French"}}
-{"position": "9", "positionText": "9", "points": "0", "wins": "0", "Constructor": {"constructorId": "williams", "url": "https://en.wikipedia.org/wiki/Williams_Racing", "name": "Williams", "nationality": "British"}}
-{"position": "10", "positionText": "10", "points": "0", "wins": "0", "Constructor": {"constructorId": "cadillac", "url": "https://en.wikipedia.org/wiki/Cadillac_in_Formula_One", "name": "Cadillac F1 Team", "nationality": "American"}}
-{"positionText": "-", "points": "0", "wins": "0", "Constructor": {"constructorId": "aston_martin", "url": "https://en.wikipedia.org/wiki/Aston_Martin_in_Formula_One", "name": "Aston Martin", "nationality": "British"}}
+{"meeting_key": 1276, "session_key": 9839, "team_name": "McLaren", "position_start": 1, "position_current": 1, "points_start": 800.0, "points_current": 833.0}
+{"meeting_key": 1276, "session_key": 9839, "team_name": "Mercedes", "position_start": 2, "position_current": 2, "points_start": 459.0, "points_current": 469.0}
+{"meeting_key": 1276, "session_key": 9839, "team_name": "Red Bull Racing", "position_start": 3, "position_current": 3, "points_start": 426.0, "points_current": 451.0}
+{"meeting_key": 1276, "session_key": 9839, "team_name": "Ferrari", "position_start": 4, "position_current": 4, "points_start": 382.0, "points_current": 398.0}
+{"meeting_key": 1276, "session_key": 9839, "team_name": "Williams", "position_start": 5, "position_current": 5, "points_start": 137.0, "points_current": 137.0}
+{"meeting_key": 1276, "session_key": 9839, "team_name": "Racing Bulls", "position_start": 6, "position_current": 6, "points_start": 92.0, "points_current": 92.0}
+{"meeting_key": 1276, "session_key": 9839, "team_name": "Aston Martin", "position_start": 7, "position_current": 7, "points_start": 80.0, "points_current": 89.0}
+{"meeting_key": 1276, "session_key": 9839, "team_name": "Haas F1 Team", "position_start": 8, "position_current": 8, "points_start": 73.0, "points_current": 79.0}
+{"meeting_key": 1276, "session_key": 9839, "team_name": "Kick Sauber", "position_start": 9, "position_current": 9, "points_start": 68.0, "points_current": 70.0}
+{"meeting_key": 1276, "session_key": 9839, "team_name": "Alpine", "position_start": 10, "position_current": 10, "points_start": 22.0, "points_current": 22.0}
