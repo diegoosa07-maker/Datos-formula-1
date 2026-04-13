@@ -48,10 +48,10 @@ if os.path.exists(ruta_csv):
     m = st.columns(4)
     
     lista_fotos = [
-        "https://media.formula1.com/content/dam/fom-website/drivers/2024Drivers/norris.jpg",
-        "https://media.formula1.com/content/dam/fom-website/drivers/2024Drivers/verstappen.jpg",
-        "https://upload.wikimedia.org/wikipedia/commons/thumb/1/18/Gabriel_Bortoleto_2024.jpg/440px-Gabriel_Bortoleto_2024.jpg",
-        "https://upload.wikimedia.org/wikipedia/commons/thumb/2/23/Isack_Hadjar_F2_Austria_2022_%28cropped%29.jpg/440px-Isack_Hadjar_F2_Austria_2022_%28cropped%29.jpg"
+        "https://img.redbull.com/images/c_crop,x_914,y_1637,h_3171,w_3171/c_fill,w_308,h_308/q_auto:low,f_auto/redbullcom/2022/5/5/esxtfazwc5k0xntwv20i/max-verstappen-profile-pic",
+        "https://img2.51gt3.com/rac/racer/202503/cfc139b2b49e48cd80a436c00a71711d.png",
+        "https://www.grandprix.com.au/uploads/images/_driverProfile/394780/FOR-GP26-DRIVER_PROFILE-M-Gabriel_Bortoleto.webp",
+        "https://img2.51gt3.com/rac/racer/202503/12a32c8783f24aec8fce1d35138941a7.png"
     ]
 
     for i in range(min(4, len(df))):
