@@ -1,23 +1,23 @@
 posicion,puntos,nombre,apellido,constructor
-1,51,George,Russell,Mercedes
-2,47,Andrea Kimi,Antonelli,Mercedes
-3,34,Charles,Leclerc,Ferrari
-4,33,Lewis,Hamilton,Ferrari
-5,17,Oliver,Bearman,Haas F1 Team
-6,15,Lando,Norris,McLaren
-7,9,Pierre,Gasly,Alpine F1 Team
-8,8,Max,Verstappen,Red Bull
-9,8,Liam,Lawson,RB F1 Team
-10,4,Arvid,Lindblad,RB F1 Team
-11,4,Isack,Hadjar,Red Bull
-12,3,Oscar,Piastri,McLaren
-13,2,Carlos,Sainz,Williams
-14,2,Gabriel,Bortoleto,Audi
-15,1,Franco,Colapinto,Alpine F1 Team
-16,0,Esteban,Ocon,Haas F1 Team
-17,0,Nico,Hülkenberg,Audi
-18,0,Alexander,Albon,Williams
-19,0,Valtteri,Bottas,Cadillac F1 Team
-20,0,Sergio,Pérez,Cadillac F1 Team
-21,0,Fernando,Alonso,Aston Martin
-22,0,Lance,Stroll,Aston Martin
+1,25,George,Russell,Mercedes
+2,18,Andrea Kimi,Antonelli,Mercedes
+3,15,Charles,Leclerc,Ferrari
+4,12,Lewis,Hamilton,Ferrari
+5,10,Lando,Norris,McLaren
+6,8,Max,Verstappen,Red Bull
+7,6,Oliver,Bearman,Haas F1 Team
+8,4,Arvid,Lindblad,RB F1 Team
+9,2,Gabriel,Bortoleto,Audi
+10,1,Pierre,Gasly,Alpine F1 Team
+11,0,Esteban,Ocon,Haas F1 Team
+12,0,Alexander,Albon,Williams
+13,0,Liam,Lawson,RB F1 Team
+14,0,Franco,Colapinto,Alpine F1 Team
+15,0,Carlos,Sainz,Williams
+16,0,Sergio,Pérez,Cadillac F1 Team
+N/A,0,Lance,Stroll,Aston Martin
+N/A,0,Fernando,Alonso,Aston Martin
+N/A,0,Valtteri,Bottas,Cadillac F1 Team
+N/A,0,Isack,Hadjar,Red Bull
+N/A,0,Oscar,Piastri,McLaren
+N/A,0,Nico,Hülkenberg,Audi
