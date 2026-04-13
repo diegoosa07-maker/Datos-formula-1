@@ -7,9 +7,8 @@ def api_request(url):
     response = requests.get(url, headers=headers)
     return response.json()
 
-def data_writing(file_path, data, mode="w"):
+def data_writing(file_path, data_to_save):
     os.makedirs("data/raw", exist_ok=True)
-
     with open(file_path, mode, encoding="utf-8") as f:
         for element in data:
           f.write(json.dumps(element) + "\n")
@@ -62,6 +61,11 @@ data_writing(team_file_path, team_data)
 sessions_2025_url = "https://api.openf1.org/v1/sessions?year=2025&session_type=Race"
 sessions_2025_data = api_request(sessions_2025_url)
 data_writing("data/raw/sessions_2025.json", sessions_2025_data, "w")
+
+# drivers number 2024: Esta información resulta MUY útil para hacer los archivos 5-7, os recomiendo que busqueís los números correspondientes para cada año.
+drivernumbers_2024_url = "https://api.openf1.org/v1/drivers?session_key=9662"
+drivernumbers_2024_data = api_request(drivernumbers_2024_url)
+data_writing("data/raw/drivernumber_2024.json", drivernumbers_2024_data, "w")
 
 # drivers (2024): Para obtener los datos finales de cada piloto del año 2024 debo extraer los datos de la carrera final (session_key=9662)
 drivers_2024_url = "https://api.openf1.org/v1/championship_drivers?session_key=9662" 
