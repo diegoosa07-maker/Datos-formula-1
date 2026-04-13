@@ -7,7 +7,7 @@ def api_request(url):
     response = requests.get(url, headers=headers)
     return response.json()
 
-def data_writing(file_path, data_to_save):
+def data_writing(file_path, data, mode = 'w'):
     os.makedirs("data/raw", exist_ok=True)
     with open(file_path, mode, encoding="utf-8") as f:
         for element in data:
