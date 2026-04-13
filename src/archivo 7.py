@@ -1,7 +1,7 @@
 import os
 import csv
 import json
-import requests
+import requests 
 
 if not os.path.exists("data/clean"):
     os.makedirs("data/clean")
@@ -22,6 +22,8 @@ for p in lista_pilotos:
     puntos = p["points"]
     pos = p["position"]
     
-    writer.writerow([pos, puntos, nombre])
+    writer.writerow([pos, puntos, nombre]) 
+   
 
-f.close()
+f.close() 
+ 
