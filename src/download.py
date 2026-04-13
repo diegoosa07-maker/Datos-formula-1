@@ -24,6 +24,7 @@ drivers_file_path = "data/raw/drivers_data.json"
 data_writing(drivers_file_path, drivers_data)
 
 
+
 # resultados de carreras 2025
 sessions_url = "https://api.openf1.org/v1/sessions?year=2025&session_type=Race"
 sessions_data = api_request(sessions_url)
