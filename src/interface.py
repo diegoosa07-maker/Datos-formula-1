@@ -24,7 +24,7 @@ st.markdown("""
 
 # 2. CABECERA Y BUSCADOR (Igual a tu dibujo)
 st.markdown('<p class="f1-title"> DATA HUB: CONSULTA DE ESTADÍSTICA RT</p>', unsafe_allow_html=True)
-busqueda = st.text_input("", placeholder="🔍 BUSCAR PILOTO, EQUIPO...")
+busqueda = st.text_input("Buscar", placeholder="🔍 BUSCAR PILOTO, EQUIPO...", label_visibility="collapsed")
 st.divider()
 
 
