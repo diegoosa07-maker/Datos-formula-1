@@ -27,7 +27,7 @@ st.markdown('<p class="f1-title"> DATA HUB: CONSULTA DE ESTADÍSTICA RT</p>', un
 busqueda = st.text_input("", placeholder="🔍 BUSCAR PILOTO, EQUIPO...")
 st.divider()
 
-# --- CARGA DE DATOS ---
+
 # --- CARGA DE DATOS ---
 ruta_csv = "data/clean/drivers_list.csv"
 
@@ -101,6 +101,7 @@ if os.path.exists(ruta_csv):
         df_mostrar = df.copy()
         if busqueda:
             df_mostrar = df[df.astype(str).apply(lambda x: x.str.contains(busqueda, case=False)).any(axis=1)]
+        #df_mostrar.rena
         st.dataframe(df_mostrar.head(10), use_container_width=True)
 else:
     st.error(" Ejecuta download.py en T2")

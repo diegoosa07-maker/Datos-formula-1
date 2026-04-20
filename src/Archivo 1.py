@@ -15,7 +15,7 @@ def json_to_csv(file_path):
                 
                # nombre del conductor y su equipo
                 fila = {
-                    "Piloto": guardar.get("broadcast_name"),
+                    "Piloto": guardar.get("full_name"),
                     "Escuderia": guardar.get("team_name")
                 }
                 out.append(fila)
@@ -24,7 +24,7 @@ def json_to_csv(file_path):
     os.makedirs("data/clean", exist_ok=True)
     
   
-    fieldnames = ["Piloto", "Scuderia"]
+    fieldnames = ["Piloto", "Escuderia"]
     
     with open("data/clean/drivers_list.csv", "w", newline="", encoding="utf-8") as csv_file:
         writer = csv.DictWriter(csv_file, fieldnames=fieldnames, extrasaction="ignore")
