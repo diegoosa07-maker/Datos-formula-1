@@ -23,8 +23,8 @@ st.markdown("""
     """, unsafe_allow_html=True)
 
 # 2. CABECERA Y BUSCADOR (Igual a tu dibujo)
-st.markdown('<p class="f1-title">s DATA HUB: CONSULTA DE ESTADÍSTICA RT</p>', unsafe_allow_html=True)
-busqueda = st.text_input("", placeholder="🔍 BUSCAR PILOTO, EQUIPO...")
+st.markdown('<p class="f1-title"> DATA HUB: CONSULTA DE ESTADÍSTICA RT</p>', unsafe_allow_html=True)
+busqueda = st.text_input("Buscar", placeholder="🔍 BUSCAR PILOTO, EQUIPO...", label_visibility="collapsed")
 st.divider()
 
 # --- CARGA DE DATOS ---
@@ -84,12 +84,26 @@ if os.path.exists(ruta_csv):
     b1, b2 = st.columns([1, 2])
     with b1:
         st.subheader(" PRÓXIMA CARRERA")
-        st.info("**GP DE CHINA**\n\nCircuito de Shanghái")
+        st.markdown("""
+        <div style="background-color: rgba(6, 104, 201, 0.2); padding: 15px; border-radius: 8px; color: white;">
+            <p style="font-size: 18px; font-weight: bold; margin: 0 0 10px 0;"><strong>GP DE MIAMI</strong></p>
+            <p style="margin: 0 0 15px 0;">Circuito de Miami</p>
+            <img src="https://live-production.wcms.abc-cdn.net.au/80ad9122fd89085f00471568c43698d3?src" style="width:100%; border-radius: 6px; margin-bottom: 10px;">
+            <p style="font-size: 13px; margin: 0; line-height: 1.5;">
+                <strong>Longitud:</strong> 5,41 km<br>
+                <strong>Curvas:</strong> 19<br>
+                <strong>Rectas Principales:</strong> 3 (más de 320km/h)<br><br>
+                <strong>Sector 1:</strong> Curvas 1-8<br>
+                <strong>Sector 2:</strong> Curvas 9-16<br>
+                <strong>Sector 3:</strong> Curvas 17-19
+            </p>
+        </div>
+        """, unsafe_allow_html=True)
     with b2:
         st.subheader(" CLASIFICACIÓN DE ESCUDERÍAS")
         df_mostrar = df.copy()
         if busqueda:
             df_mostrar = df[df.astype(str).apply(lambda x: x.str.contains(busqueda, case=False)).any(axis=1)]
-        st.dataframe(df_mostrar.head(10), use_container_width=True)
+        st.dataframe(df_mostrar.head(10), width='stretch')
 else:
     st.error(" Ejecuta download.py en T2")
