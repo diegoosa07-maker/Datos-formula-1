@@ -24,7 +24,7 @@ st.markdown("""
 
 # 2. CABECERA Y BUSCADOR (Igual a tu dibujo)
 st.markdown('<p class="f1-title"> DATA HUB: CONSULTA DE ESTADÍSTICA RT</p>', unsafe_allow_html=True)
-busqueda = st.text_input("", placeholder="🔍 BUSCAR PILOTO, EQUIPO...")
+busqueda = st.text_input("Buscar", placeholder="🔍 BUSCAR PILOTO, EQUIPO...", label_visibility="collapsed")
 st.divider()
 
 
@@ -46,32 +46,21 @@ if os.path.exists(ruta_csv):
     # 3. BLOQUE SUPERIOR
     t1, t2, t3 = st.columns(3)
     with t1:
-        # Ahora sí, lista_fotos ya existe
-        foto_lider = lista_fotos[0]
-        st.markdown(f"""
-            <div class="card">
-                <p style="color:red; margin:0; font-weight:bold; font-size: 20px">LÍDER CAMPEONATO</p>
-                <img src="{foto_lider}" width="100" style="border-radius: 50%; border: 3px solid #e10600; margin: 10px 0; object-fit: cover; aspect-ratio: 1/1;">
-                <h3>{df.iloc[0][col_n]}</h3>
-            </div>
-        """, unsafe_allow_html=True)
+        st.markdown(f'<div class="card"><p style="color:red; margin:0;"> LÍDER CAMPEONATO</p><h3>{df.iloc[0][col_n]}</h3></div>', unsafe_allow_html=True)
+    
     
     with t2:
-        st.markdown('<div class="card"><p style="color:red; margin:0; font-weight:bold; font-size: 20px"> MEJOR ESCUDERÍA</p><br><h3>GP DE JAPÓN</h3></div>', unsafe_allow_html=True)
-    
-    with t3:
-        st.markdown(f"""
+        # Metemos el nombre y la imagen dentro del mismo st.markdown para que hereden el estilo de la tarjeta
+        st.markdown(f'''
             <div class="card">
-                <p style="color:red; margin:0; font-weight:bold; font-size: 20px"> TOP 3 PILOTOS</p>
-                <p style="text-align: center; padding-left: 9px; margin-top: 10px; font-size: 16px;font-weight: bold;">
-                    1. {df.iloc[0][col_n]}<br>
-                    2. {df.iloc[1][col_n]}<br>
-                    3. {df.iloc[2][col_n]}<br>
-                    4. {df.iloc[3][col_n]}<br>
-                    5. {df.iloc[4][col_n]}
-                </p>
+                <p style="color:red; margin:0; font-weight:bold;">ESCUDERÍA LÍDER</p>
+                <h3 style="margin:10px 0;">Oracle Red Bull Racing</h3>
+                <img src="https://upload.wikimedia.org/wikipedia/it/c/cb/Oracle_Red_Bull_Racing_2026.jpg">
             </div>
-        """, unsafe_allow_html=True)
+        ''', unsafe_allow_html=True)
+    with t3:
+        st.markdown(f'<div class="card"><p style="color:red; margin:0;">TOP 3 PILOTOS</p><p>1. {df.iloc[0][col_n]}<br>2. {df.iloc[1][col_n]}</p></div>', unsafe_allow_html=True)
+    
 
     # 4. PILOTOS DESTACADOS (Aquí ya no hace falta definir lista_fotos otra vez)
     st.markdown("### PILOTOS DESTACADOS")
@@ -95,13 +84,26 @@ if os.path.exists(ruta_csv):
     b1, b2 = st.columns([1, 2])
     with b1:
         st.subheader(" PRÓXIMA CARRERA")
-        st.info("**GP DE CHINA**\n\nCircuito de Shanghái")
+        st.markdown("""
+        <div style="background-color: rgba(6, 104, 201, 0.2); padding: 15px; border-radius: 8px; color: white;">
+            <p style="font-size: 18px; font-weight: bold; margin: 0 0 10px 0;"><strong>GP DE MIAMI</strong></p>
+            <p style="margin: 0 0 15px 0;">Circuito de Miami</p>
+            <img src="https://live-production.wcms.abc-cdn.net.au/80ad9122fd89085f00471568c43698d3?src" style="width:100%; border-radius: 6px; margin-bottom: 10px;">
+            <p style="font-size: 13px; margin: 0; line-height: 1.5;">
+                <strong>Longitud:</strong> 5,41 km<br>
+                <strong>Curvas:</strong> 19<br>
+                <strong>Rectas Principales:</strong> 3 (más de 320km/h)<br><br>
+                <strong>Sector 1:</strong> Curvas 1-8<br>
+                <strong>Sector 2:</strong> Curvas 9-16<br>
+                <strong>Sector 3:</strong> Curvas 17-19
+            </p>
+        </div>
+        """, unsafe_allow_html=True)
     with b2:
         st.subheader(" CLASIFICACIÓN DE ESCUDERÍAS")
         df_mostrar = df.copy()
         if busqueda:
             df_mostrar = df[df.astype(str).apply(lambda x: x.str.contains(busqueda, case=False)).any(axis=1)]
-        #df_mostrar.rena
-        st.dataframe(df_mostrar.head(10), use_container_width=True)
+        st.dataframe(df_mostrar.head(10), width='stretch')
 else:
     st.error(" Ejecuta download.py en T2")
