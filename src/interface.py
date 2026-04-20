@@ -28,32 +28,53 @@ busqueda = st.text_input("Buscar", placeholder="🔍 BUSCAR PILOTO, EQUIPO...", 
 st.divider()
 
 # --- CARGA DE DATOS ---
+# --- CARGA DE DATOS ---
 ruta_csv = "data/clean/drivers_list.csv"
 
 if os.path.exists(ruta_csv):
     df = pd.read_csv(ruta_csv)
     col_n = df.columns[0] 
 
+    # --- MOVER LA LISTA AQUÍ (Antes de usarla en t1) ---
+    lista_fotos = [
+        "https://img.redbull.com/images/c_crop,x_914,y_1637,h_3171,w_3171/c_fill,w_308,h_308/q_auto:low,f_auto/redbullcom/2022/5/5/esxtfazwc5k0xntwv20i/max-verstappen-profile-pic",
+        "https://img2.51gt3.com/rac/racer/202503/cfc139b2b49e48cd80a436c00a71711d.png",
+        "https://www.grandprix.com.au/uploads/images/_driverProfile/394780/FOR-GP26-DRIVER_PROFILE-M-Gabriel_Bortoleto.webp",
+        "https://img2.51gt3.com/rac/racer/202503/12a32c8783f24aec8fce1d35138941a7.png"
+    ]
+
     # 3. BLOQUE SUPERIOR
     t1, t2, t3 = st.columns(3)
     with t1:
-        st.markdown(f'<div class="card"><p style="color:red; margin:0;"> LÍDER CAMPEONATO</p><h3>{df.iloc[0][col_n]}</h3></div>', unsafe_allow_html=True)
+        # Ahora sí, lista_fotos ya existe
+        foto_lider = lista_fotos[0]
+        st.markdown(f"""
+            <div class="card">
+                <p style="color:red; margin:0; font-weight:bold;">LÍDER CAMPEONATO</p>
+                <img src="{foto_lider}" width="100" style="border-radius: 50%; border: 3px solid #e10600; margin: 10px 0; object-fit: cover; aspect-ratio: 1/1;">
+                <h3>{df.iloc[0][col_n]}</h3>
+            </div>
+        """, unsafe_allow_html=True)
+    
     with t2:
-        st.markdown('<div class="card"><p style="color:red; margin:0;"> ÚLTIMA CARRERA</p><h3>GP DE JAPÓN</h3></div>', unsafe_allow_html=True)
+        st.markdown('<div class="card"><p style="color:red; margin:0; font-weight:bold;"> ÚLTIMA CARRERA</p><br><h3>GP DE JAPÓN</h3></div>', unsafe_allow_html=True)
+    
     with t3:
-        st.markdown(f'<div class="card"><p style="color:red; margin:0;"> TOP 3 PILOTOS</p><p>1. {df.iloc[0][col_n]}<br>2. {df.iloc[1][col_n]}<br>3. {df.iloc[2][col_n]}</p></div>', unsafe_allow_html=True)
+        st.markdown(f"""
+            <div class="card">
+                <p style="color:red; margin:0; font-weight:bold;"> TOP 3 PILOTOS</p>
+                <p style="text-align: left; padding-left: 20px; margin-top: 10px;">
+                    1. {df.iloc[0][col_n]}<br>
+                    2. {df.iloc[1][col_n]}<br>
+                    3. {df.iloc[2][col_n]}
+                </p>
+            </div>
+        """, unsafe_allow_html=True)
 
-    # 4. PILOTOS DESTACADOS (Fotos por posición para que no fallen)
-    st.markdown("###  PILOTOS DESTACADOS")
+    # 4. PILOTOS DESTACADOS (Aquí ya no hace falta definir lista_fotos otra vez)
+    st.markdown("### PILOTOS DESTACADOS")
     m = st.columns(4)
     
-    lista_fotos = [
-        "https://media.formula1.com/content/dam/fom-website/drivers/2024Drivers/norris.jpg",
-        "https://media.formula1.com/content/dam/fom-website/drivers/2024Drivers/verstappen.jpg",
-        "https://upload.wikimedia.org/wikipedia/commons/thumb/1/18/Gabriel_Bortoleto_2024.jpg/440px-Gabriel_Bortoleto_2024.jpg",
-        "https://upload.wikimedia.org/wikipedia/commons/thumb/2/23/Isack_Hadjar_F2_Austria_2022_%28cropped%29.jpg/440px-Isack_Hadjar_F2_Austria_2022_%28cropped%29.jpg"
-    ]
-
     for i in range(min(4, len(df))):
         nombre = df.iloc[i][col_n]
         foto_url = lista_fotos[i] if i < len(lista_fotos) else "https://www.formula1.com/etc/designs/fom-website/images/helmet-placeholder.png"
