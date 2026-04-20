@@ -123,6 +123,6 @@ if os.path.exists(ruta_csv):
         df_mostrar = df.copy()
         if busqueda:
             df_mostrar = df[df.astype(str).apply(lambda x: x.str.contains(busqueda, case=False)).any(axis=1)]
-        st.dataframe(df_mostrar.head(10), width='stretch')
+        st.dataframe(df_mostrar.head(20), width='stretch')
 else:
    st.error(" Ejecuta download.py en T2")
