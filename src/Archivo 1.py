@@ -16,7 +16,7 @@ def json_to_csv(file_path):
                # nombre del conductor y su equipo
                 fila = {
                     "Piloto": guardar.get("broadcast_name"),
-                    "Scuderia": guardar.get("team_name")
+                    "Escuderia": guardar.get("team_name")
                 }
                 out.append(fila)
 

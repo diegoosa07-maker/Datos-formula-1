@@ -23,7 +23,7 @@ st.markdown("""
     """, unsafe_allow_html=True)
 
 # 2. CABECERA Y BUSCADOR (Igual a tu dibujo)
-st.markdown('<p class="f1-title">s DATA HUB: CONSULTA DE ESTADÍSTICA RT</p>', unsafe_allow_html=True)
+st.markdown('<p class="f1-title"> DATA HUB: CONSULTA DE ESTADÍSTICA RT</p>', unsafe_allow_html=True)
 busqueda = st.text_input("", placeholder="🔍 BUSCAR PILOTO, EQUIPO...")
 st.divider()
 
@@ -50,23 +50,25 @@ if os.path.exists(ruta_csv):
         foto_lider = lista_fotos[0]
         st.markdown(f"""
             <div class="card">
-                <p style="color:red; margin:0; font-weight:bold;">LÍDER CAMPEONATO</p>
+                <p style="color:red; margin:0; font-weight:bold; font-size: 20px">LÍDER CAMPEONATO</p>
                 <img src="{foto_lider}" width="100" style="border-radius: 50%; border: 3px solid #e10600; margin: 10px 0; object-fit: cover; aspect-ratio: 1/1;">
                 <h3>{df.iloc[0][col_n]}</h3>
             </div>
         """, unsafe_allow_html=True)
     
     with t2:
-        st.markdown('<div class="card"><p style="color:red; margin:0; font-weight:bold;"> ÚLTIMA CARRERA</p><br><h3>GP DE JAPÓN</h3></div>', unsafe_allow_html=True)
+        st.markdown('<div class="card"><p style="color:red; margin:0; font-weight:bold; font-size: 20px"> MEJOR ESCUDERÍA</p><br><h3>GP DE JAPÓN</h3></div>', unsafe_allow_html=True)
     
     with t3:
         st.markdown(f"""
             <div class="card">
-                <p style="color:red; margin:0; font-weight:bold;"> TOP 3 PILOTOS</p>
-                <p style="text-align: left; padding-left: 20px; margin-top: 10px;">
+                <p style="color:red; margin:0; font-weight:bold; font-size: 20px"> TOP 3 PILOTOS</p>
+                <p style="text-align: center; padding-left: 9px; margin-top: 10px; font-size: 16px;font-weight: bold;">
                     1. {df.iloc[0][col_n]}<br>
                     2. {df.iloc[1][col_n]}<br>
-                    3. {df.iloc[2][col_n]}
+                    3. {df.iloc[2][col_n]}<br>
+                    4. {df.iloc[3][col_n]}<br>
+                    5. {df.iloc[4][col_n]}
                 </p>
             </div>
         """, unsafe_allow_html=True)
