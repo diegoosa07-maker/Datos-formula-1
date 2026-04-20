@@ -27,7 +27,7 @@ st.markdown('<p class="f1-title"> DATA HUB: CONSULTA DE ESTADÍSTICA RT</p>', un
 busqueda = st.text_input("Buscar", placeholder="🔍 BUSCAR PILOTO, EQUIPO...", label_visibility="collapsed")
 st.divider()
 
-# --- CARGA DE DATOS ---
+
 # --- CARGA DE DATOS ---
 ruta_csv = "data/clean/drivers_list.csv"
 
