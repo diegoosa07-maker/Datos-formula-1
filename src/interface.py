@@ -55,7 +55,7 @@ if os.path.exists(ruta_csv):
             <div class="card">
                 <p style="color:red; margin:0; font-weight:bold;">ESCUDERÍA LÍDER</p>
                 <h3 style="margin:10px 0;">Oracle Red Bull Racing</h3>
-                <img src="https://raw.githubusercontent.com/f1db/f1db-images/main/images/teams/red-bull.png" width="120">
+                <img src="https://upload.wikimedia.org/wikipedia/it/c/cb/Oracle_Red_Bull_Racing_2026.jpg">
             </div>
         ''', unsafe_allow_html=True)
     with t3:
