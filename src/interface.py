@@ -45,22 +45,41 @@ if os.path.exists(ruta_csv):
 
     # 3. BLOQUE SUPERIOR
     t1, t2, t3 = st.columns(3)
+    col_vacia_izq, t1, t2, t3, col_vacia_der = st.columns([1, 3, 3, 3, 1])
     with t1:
-        st.markdown(f'<div class="card"><p style="color:red; margin:0;"> LÍDER CAMPEONATO</p><h3>{df.iloc[0][col_n]}</h3></div>', unsafe_allow_html=True)
-    
+        # Ahora sí, lista_fotos ya existe
+        foto_lider = lista_fotos[0]
+        st.markdown(f"""
+            <div class="card">
+                <p style="color:red; margin:0; font-weight:bold; font-size: 20px">LÍDER CAMPEONATO</p>
+                <img src="{foto_lider}" width="100" style="border-radius: 50%; border: 3px solid #e10600; margin: 10px 0; object-fit: cover; aspect-ratio: 1/1;">
+                <h3>{df.iloc[0][col_n]}</h3>
+            </div>
+        """, unsafe_allow_html=True)
     
     with t2:
         # Metemos el nombre y la imagen dentro del mismo st.markdown para que hereden el estilo de la tarjeta
         st.markdown(f'''
             <div class="card">
-                <p style="color:red; margin:0; font-weight:bold;">ESCUDERÍA LÍDER</p>
-                <h3 style="margin:10px 0;">Oracle Red Bull Racing</h3>
+                <p style="color:red; margin:0; font-weight:bold;font-size: 20px">ESCUDERÍA LÍDER</p>
+                <h3 style="margin:10px 0;">Red Bull Racing</h3>
                 <img src="https://img.redbull.com/images/c_limit,w_4000/e_trim:1:transparent/c_limit,w_175,h_175/bo_5px_solid_rgb:00000000/q_auto:best,f_auto/redbullcom/2022/2/10/nhzwcy8ouv8jonuxscfx/red-bull-racing-tenant-logo">
             </div>
         ''', unsafe_allow_html=True)
-    with t3:
-        st.markdown(f'<div class="card"><p style="color:red; margin:0;">TOP 3 PILOTOS</p><p>1. {df.iloc[0][col_n]}<br>2. {df.iloc[1][col_n]}</p></div>', unsafe_allow_html=True)
     
+    with t3:
+        st.markdown(f"""
+            <div class="card">
+                <p style="color:red; margin:0; font-weight:bold; font-size: 20px"> TOP 3 PILOTOS</p>
+                <p style="text-align: center; padding-left: 9px; margin-top: 10px; font-size: 16px;font-weight: bold;">
+                    1. {df.iloc[0][col_n]}<br>
+                    2. {df.iloc[1][col_n]}<br>
+                    3. {df.iloc[2][col_n]}<br>
+                    4. {df.iloc[3][col_n]}<br>
+                    5. {df.iloc[4][col_n]}
+                </p>
+            </div>
+        """, unsafe_allow_html=True)
 
     # 4. PILOTOS DESTACADOS (Aquí ya no hace falta definir lista_fotos otra vez)
     st.markdown("### PILOTOS DESTACADOS")
@@ -79,7 +98,7 @@ if os.path.exists(ruta_csv):
                 </div>
             """, unsafe_allow_html=True)
 
-    # 5. BLOQUE INFERIOR
+      # 5. BLOQUE INFERIOR
     st.divider()
     b1, b2 = st.columns([1, 2])
     with b1:
@@ -106,4 +125,4 @@ if os.path.exists(ruta_csv):
             df_mostrar = df[df.astype(str).apply(lambda x: x.str.contains(busqueda, case=False)).any(axis=1)]
         st.dataframe(df_mostrar.head(10), width='stretch')
 else:
-    st.error(" Ejecuta download.py en T2")
+   st.error(" Ejecuta download.py en T2")
