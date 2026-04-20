@@ -55,7 +55,7 @@ if os.path.exists(ruta_csv):
             <div class="card">
                 <p style="color:red; margin:0; font-weight:bold;">ESCUDERÍA LÍDER</p>
                 <h3 style="margin:10px 0;">Oracle Red Bull Racing</h3>
-                <img src="https://upload.wikimedia.org/wikipedia/it/c/cb/Oracle_Red_Bull_Racing_2026.jpg">
+                <img src="https://img.redbull.com/images/c_limit,w_4000/e_trim:1:transparent/c_limit,w_400,h_400/bo_5px_solid_rgb:00000000/q_auto:best,f_auto/redbullcom/2022/2/10/nhzwcy8ouv8jonuxscfx/red-bull-racing-tenant-logo">
             </div>
         ''', unsafe_allow_html=True)
     with t3:
