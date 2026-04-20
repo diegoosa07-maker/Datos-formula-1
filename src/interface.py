@@ -38,10 +38,20 @@ if os.path.exists(ruta_csv):
     t1, t2, t3 = st.columns(3)
     with t1:
         st.markdown(f'<div class="card"><p style="color:red; margin:0;"> LÍDER CAMPEONATO</p><h3>{df.iloc[0][col_n]}</h3></div>', unsafe_allow_html=True)
+    
+    
     with t2:
-        st.markdown('<div class="card"><p style="color:red; margin:0;"> ÚLTIMA CARRERA</p><h3>GP DE JAPÓN</h3></div>', unsafe_allow_html=True)
+        # Metemos el nombre y la imagen dentro del mismo st.markdown para que hereden el estilo de la tarjeta
+        st.markdown(f'''
+            <div class="card">
+                <p style="color:red; margin:0; font-weight:bold;">ESCUDERÍA LÍDER</p>
+                <h3 style="margin:10px 0;">Oracle Red Bull Racing</h3>
+                <img src="https://raw.githubusercontent.com/f1db/f1db-images/main/images/teams/red-bull.png" width="120">
+            </div>
+        ''', unsafe_allow_html=True)
     with t3:
-        st.markdown(f'<div class="card"><p style="color:red; margin:0;"> TOP 3 PILOTOS</p><p>1. {df.iloc[0][col_n]}<br>2. {df.iloc[1][col_n]}<br>3. {df.iloc[2][col_n]}</p></div>', unsafe_allow_html=True)
+        st.markdown(f'<div class="card"><p style="color:red; margin:0;">TOP 3 PILOTOS</p><p>1. {df.iloc[0][col_n]}<br>2. {df.iloc[1][col_n]}</p></div>', unsafe_allow_html=True)
+    
 
     # 4. PILOTOS DESTACADOS (Fotos por posición para que no fallen)
     st.markdown("###  PILOTOS DESTACADOS")
