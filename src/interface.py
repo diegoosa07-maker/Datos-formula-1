@@ -62,15 +62,15 @@ if os.path.exists(ruta_csv):
         st.markdown(f'''
             <div class="card">
                 <p style="color:red; margin:0; font-weight:bold;font-size: 20px">ESCUDERÍA LÍDER</p>
-                <h3 style="margin:10px 0;">Red Bull Racing</h3>
                 <img src="https://img.redbull.com/images/c_limit,w_4000/e_trim:1:transparent/c_limit,w_175,h_175/bo_5px_solid_rgb:00000000/q_auto:best,f_auto/redbullcom/2022/2/10/nhzwcy8ouv8jonuxscfx/red-bull-racing-tenant-logo">
+                <h3 style="margin:10px 0;">RedBull Racing</h3>
             </div>
         ''', unsafe_allow_html=True)
     
     with t3:
         st.markdown(f"""
             <div class="card">
-                <p style="color:red; margin:0; font-weight:bold; font-size: 20px"> TOP 3 PILOTOS</p>
+                <p style="color:red; margin:0; font-weight:bold; font-size: 20px"> TOP 5 PILOTOS</p>
                 <p style="text-align: center; padding-left: 9px; margin-top: 10px; font-size: 16px;font-weight: bold;">
                     1. {df.iloc[0][col_n]}<br>
                     2. {df.iloc[1][col_n]}<br>
@@ -82,7 +82,7 @@ if os.path.exists(ruta_csv):
         """, unsafe_allow_html=True)
 
     # 4. PILOTOS DESTACADOS (Aquí ya no hace falta definir lista_fotos otra vez)
-    st.markdown("### PILOTOS DESTACADOS")
+    st.markdown("### PILOTOS DESTACADOS:")
     m = st.columns(4)
     
     for i in range(min(4, len(df))):
@@ -102,7 +102,7 @@ if os.path.exists(ruta_csv):
     st.divider()
     b1, b2 = st.columns([1, 2])
     with b1:
-        st.subheader(" PRÓXIMA CARRERA")
+        st.subheader(" PRÓXIMA CARRERA:")
         st.markdown("""
         <div style="background-color: rgba(6, 104, 201, 0.2); padding: 15px; border-radius: 8px; color: white;">
             <p style="font-size: 18px; font-weight: bold; margin: 0 0 10px 0;"><strong>GP DE MIAMI</strong></p>
@@ -119,10 +119,10 @@ if os.path.exists(ruta_csv):
         </div>
         """, unsafe_allow_html=True)
     with b2:
-        st.subheader(" CLASIFICACIÓN DE ESCUDERÍAS")
+        st.subheader(" CLASIFICACIÓN DE ESCUDERÍAS:")
         df_mostrar = df.copy()
         if busqueda:
             df_mostrar = df[df.astype(str).apply(lambda x: x.str.contains(busqueda, case=False)).any(axis=1)]
-        st.dataframe(df_mostrar.head(10), width='stretch')
+        st.dataframe(df_mostrar.head(20), width='stretch')
 else:
    st.error(" Ejecuta download.py en T2")
