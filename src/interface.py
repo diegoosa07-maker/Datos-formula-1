@@ -81,27 +81,52 @@ if os.path.exists(ruta_csv):
             </div>
         """, unsafe_allow_html=True)
 
-    # 4. PILOTOS DESTACADOS (Aquí ya no hace falta definir lista_fotos otra vez)
-    st.markdown("### PILOTOS DESTACADOS:")
+    # CARRUSEL DE PILOTOS
+    if 'carousel_index' not in st.session_state:
+        st.session_state.carousel_index = 0
+    
+    max_display = 4
+    total_pilotos = len(df)
+    
+    # Botones de navegación
+    col_nav_left, col_nav_center, col_nav_right = st.columns([1, 3, 1])
+    
+    with col_nav_left:
+        if st.button("◀ Anterior", key="prev_carousel"):
+            st.session_state.carousel_index = max(0, st.session_state.carousel_index - max_display)
+    
+    with col_nav_center:
+        pilotos_mostrados = min(max_display, total_pilotos - st.session_state.carousel_index)
+        inicio = st.session_state.carousel_index + 1
+        fin = st.session_state.carousel_index + pilotos_mostrados
+        st.markdown(f"<p style='text-align: center; color: #e10600;'><b>Pilotos {inicio} - {fin} de {total_pilotos}</b></p>", unsafe_allow_html=True)
+    
+    with col_nav_right:
+        if st.button("Siguiente ▶", key="next_carousel"):
+            if st.session_state.carousel_index + max_display < total_pilotos:
+                st.session_state.carousel_index += max_display
+    
+    # Mostrar tarjetas del carrusel
     m = st.columns(4)
     
-    for i in range(min(4, len(df))):
-        nombre = df.iloc[i][col_n]
-        foto_url = lista_fotos[i] if i < len(lista_fotos) else "https://www.formula1.com/etc/designs/fom-website/images/helmet-placeholder.png"
+    for i in range(min(max_display, total_pilotos - st.session_state.carousel_index)):
+        idx = st.session_state.carousel_index + i
+        nombre = df.iloc[idx][col_n]
+        foto_url = lista_fotos[idx] if idx < len(lista_fotos) else "https://www.formula1.com/etc/designs/fom-website/images/helmet-placeholder.png"
         
         with m[i]:
             st.markdown(f"""
                 <div class="card">
                     <img src="{foto_url}" width="130" style="border-radius: 50%; border: 3px solid #e10600; margin-bottom: 10px; object-fit: cover; aspect-ratio: 1/1;">
                     <p style="font-size: 18px;"><b>{nombre}</b></p>
-                    <p style="color:red; font-weight:bold;">{210 - (i*15)} PTS</p>
+                    <p style="color:red; font-weight:bold;">{210 - (idx*15)} PTS</p>
                 </div>
             """, unsafe_allow_html=True)
 
       # 5. BLOQUE INFERIOR
-    st.divider()
-    b1, b2 = st.columns([1, 2])
-    with b1:
+st.divider()
+b1, b2 = st.columns([1, 2])
+with b1:
         st.subheader(" PRÓXIMA CARRERA:")
         st.markdown("""
         <div style="background-color: rgba(6, 104, 201, 0.2); padding: 15px; border-radius: 8px; color: white;">
@@ -118,11 +143,13 @@ if os.path.exists(ruta_csv):
             </p>
         </div>
         """, unsafe_allow_html=True)
-    with b2:
-        st.subheader(" CLASIFICACIÓN DE ESCUDERÍAS:")
+with b2:
+        st.subheader("CLASIFICACIÓN DE ESCUDERÍAS:")
         df_mostrar = df.copy()
-        if busqueda:
+        if 'busqueda' in locals() and busqueda:
             df_mostrar = df[df.astype(str).apply(lambda x: x.str.contains(busqueda, case=False)).any(axis=1)]
-        st.dataframe(df_mostrar.head(20), width='stretch')
-else:
-   st.error(" Ejecuta download.py en T2")
+        
+        if df_mostrar.empty:
+            st.error(" Ejecuta download.py en T2")
+        else:
+            st.dataframe(df_mostrar.head(20), use_container_width=True)
