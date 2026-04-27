@@ -23,7 +23,14 @@ st.markdown("""
     """, unsafe_allow_html=True)
 
 # 2. CABECERA Y BUSCADOR (Igual a tu dibujo)
-st.markdown('<p class="f1-title"> DATA HUB: CONSULTA DE ESTADÍSTICA RT</p>', unsafe_allow_html=True)
+logo_col, title_col = st.columns([0.15, 0.85])
+
+with logo_col:
+    st.image("C:\\Users\\Pacho Landin\\Downloads\\Gemini_Generated_Image_rytchdrytchdrytc-removebg-preview.png", width=180)
+
+with title_col:
+    st.markdown('<p class="f1-title"> F1 LIVE HUB: CONSULTA DE ESTADÍSTICA RT</p>', unsafe_allow_html=True)
+
 busqueda = st.text_input("Buscar", placeholder="🔍 BUSCAR PILOTO, EQUIPO...", label_visibility="collapsed")
 st.divider()
 
@@ -62,7 +69,7 @@ if os.path.exists(ruta_csv):
         st.markdown(f'''
             <div class="card">
                 <p style="color:red; margin:0; font-weight:bold;font-size: 20px">ESCUDERÍA LÍDER</p>
-                <img src="https://img.redbull.com/images/c_limit,w_4000/e_trim:1:transparent/c_limit,w_175,h_175/bo_5px_solid_rgb:00000000/q_auto:best,f_auto/redbullcom/2022/2/10/nhzwcy8ouv8jonuxscfx/red-bull-racing-tenant-logo">
+                <img src="https://img.redbull.com/images/c_limit,w_4000/e_trim:1:transparent/c_limit,w_190,h_190/bo_5px_solid_rgb:00000000/q_auto:best,f_auto/redbullcom/2022/2/10/nhzwcy8ouv8jonuxscfx/red-bull-racing-tenant-logo">
                 <h3 style="margin:10px 0;">RedBull Racing</h3>
             </div>
         ''', unsafe_allow_html=True)
