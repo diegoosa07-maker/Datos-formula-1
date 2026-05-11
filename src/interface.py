@@ -81,24 +81,49 @@ if os.path.exists(ruta_csv):
             </div>
         """, unsafe_allow_html=True)
 
-    # 4. PILOTOS DESTACADOS (Aquí ya no hace falta definir lista_fotos otra vez)
-    st.markdown("### PILOTOS DESTACADOS:")
-    m = st.columns(4) # Cambiar este número a 10 !!!!!!!!!!!!!!!!!!!!!!!!!
+    # CARRUSEL DE PILOTOS
+    if 'carousel_index' not in st.session_state:
+        st.session_state.carousel_index = 0
     
-    for i in range(min(4, len(df))): # !!!!!!!!!!!!!!!!!! Cambiar este número a 10 para mostrar más pilotos, también añadir más imagenes dentro de lista_fotos para la pfp de cada corredor
-        nombre = df.iloc[i][col_n]
-        foto_url = lista_fotos[i] if i < len(lista_fotos) else "https://www.formula1.com/etc/designs/fom-website/images/helmet-placeholder.png"
+    max_display = 4
+    total_pilotos = len(df)
+    
+    # Botones de navegación
+    col_nav_left, col_nav_center, col_nav_right = st.columns([1, 3, 1])
+    
+    with col_nav_left:
+        if st.button("◀ Anterior", key="prev_carousel"):
+            st.session_state.carousel_index = max(0, st.session_state.carousel_index - max_display)
+    
+    with col_nav_center:
+        pilotos_mostrados = min(max_display, total_pilotos - st.session_state.carousel_index)
+        inicio = st.session_state.carousel_index + 1
+        fin = st.session_state.carousel_index + pilotos_mostrados
+        st.markdown(f"<p style='text-align: center; color: #e10600;'><b>Pilotos {inicio} - {fin} de {total_pilotos}</b></p>", unsafe_allow_html=True)
+    
+    with col_nav_right:
+        if st.button("Siguiente ▶", key="next_carousel"):
+            if st.session_state.carousel_index + max_display < total_pilotos:
+                st.session_state.carousel_index += max_display
+    
+    # Mostrar tarjetas del carrusel
+    m = st.columns(4)
+    
+    for i in range(min(max_display, total_pilotos - st.session_state.carousel_index)):
+        idx = st.session_state.carousel_index + i
+        nombre = df.iloc[idx][col_n]
+        foto_url = lista_fotos[idx] if idx < len(lista_fotos) else "https://www.formula1.com/etc/designs/fom-website/images/helmet-placeholder.png"
         
         with m[i]:
             st.markdown(f"""
                 <div class="card">
                     <img src="{foto_url}" width="130" style="border-radius: 50%; border: 3px solid #e10600; margin-bottom: 10px; object-fit: cover; aspect-ratio: 1/1;">
                     <p style="font-size: 18px;"><b>{nombre}</b></p>
-                    <p style="color:red; font-weight:bold;">{210 - (i*15)} PTS</p>
+                    <p style="color:red; font-weight:bold;">{210 - (idx*15)} PTS</p>
                 </div>
             """, unsafe_allow_html=True)
 
-      # 5. BLOQUE INFERIOR
+    # 5. BLOQUE INFERIOR
     st.divider()
     b1, b2 = st.columns([1, 2])
     with b1:
