@@ -54,10 +54,26 @@ if os.path.exists(ruta_csv):
 
     # --- MOVER LA LISTA AQUÍ (Antes de usarla en t1) ---
     lista_fotos = [
-        "https://img.redbull.com/images/c_crop,x_914,y_1637,h_3171,w_3171/c_fill,w_308,h_308/q_auto:low,f_auto/redbullcom/2022/5/5/esxtfazwc5k0xntwv20i/max-verstappen-profile-pic",
-        "https://img2.51gt3.com/rac/racer/202503/cfc139b2b49e48cd80a436c00a71711d.png",
-        "https://www.grandprix.com.au/uploads/images/_driverProfile/394780/FOR-GP26-DRIVER_PROFILE-M-Gabriel_Bortoleto.webp",
-        "https://img2.51gt3.com/rac/racer/202503/12a32c8783f24aec8fce1d35138941a7.png"
+        "https://img2.51gt3.com/rac/racer/202503/cfc139b2b49e48cd80a436c00a71711d.png", # Verstappen
+        "https://img.redbull.com/images/c_crop,x_914,y_1637,h_3171,w_3171/c_fill,w_308,h_308/q_auto:low,f_auto/redbullcom/2022/5/5/esxtfazwc5k0xntwv20i/max-verstappen-profile-pic", # Norris
+        "https://img2.51gt3.com/rac/racer/202503/4a3ecd96c2fd49508824cae497bfcec3.png?x-oss-process=style/_nowm", # Bortoleto 
+        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTpOdpFWHKoK6ZLKyWG760LL0wIjfvVz9jkwQ&s", # Hadjar
+        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRSosRLhYZ0ZrhSkCM9w97fkgDMrY7yF7Uy-g&s", # Jack Doohan (Alpine)
+        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ9swwiCzY4ulkHmWcYjDC4JZm9d_n4G_zavQ&s", # Pierre Gasly (Alpine)
+        "https://preview.redd.it/fun-fact-andrea-kimi-antonelli-might-be-the-first-f1-driver-v0-0uznvsuwu8ve1.jpeg?width=640&crop=smart&auto=webp&s=3c3ca7185c5a1f438fbbd051bd3b8c881abc4d06", # Kimi Antonelli (Mercedes)
+        "https://img2.51gt3.com/rac/racer/202503/1f1fd439e5344c7a83faf4a80d09486f.png", # Fernando Alonso (Aston Martin) --
+        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRMolyGxbEvjWbsApmtV5zJkofNtuZHxaxO-Q&s", # Charles Leclerc (Ferrari)
+        "https://media.formula1.com/image/upload/f_auto,c_limit,q_75,w_1320/content/dam/fom-website/drivers/2024Drivers/alonso", # Lance Stroll (Aston Martin)
+        "https://img2.51gt3.com/rac/racer/202503/737aac3065d74096b767308cf4c3164e.png?x-oss-process=style/_nhd_en", # Yuki Tsunoda (RB) Nico
+        "https://img2.51gt3.com/rac/racer/202503/12a32c8783f24aec8fce1d35138941a7.png", # Alexander Albon (Williams)Isack hadjar 
+        "https://img2.51gt3.com/rac/racer/202503/b4e1b56f7f2a4c989f16787b26852cba.png?x-oss-process=style/_nhd_en", # Nico Hulkenberg (Sauber) oliver 
+        "https://img2.51gt3.com/rac/racer/202503/34d4155677ae4874aae0240f9b366cc3.png?x-oss-process=style/_nowm", # Liam Lawson (Red Bull) Esteban Ocon 
+        "https://img2.51gt3.com/rac/racer/202503/3a6b5ab450b040feb7cab3cb50e9a53f.png?x-oss-process=style/_nowm", # Esteban Ocon (Haas)Liam Lawson
+        "https://media.formula1.com/image/upload/f_auto,c_limit,q_75,w_1320/content/dam/fom-website/drivers/2025Drivers/tsunoda", # Lewis Hamilton (Ferrari) Yuki tsunoda
+        "https://img2.51gt3.com/rac/racer/202503/2869081e10e6412894446d1320c9cb44.png?x-oss-process=style/_nowm", # Carlos Sainz (Williams) Lance stroll
+        "https://media.formula1.com/image/upload/f_auto,c_limit,q_75,w_1320/content/dam/fom-website/drivers/2025Drivers/gasly", # George Russell (Mercedes)Pierra Gasly
+        "https://www.grandprix.com.au/uploads/images/_driverProfile/394780/FOR-GP26-DRIVER_PROFILE-M-Gabriel_Bortoleto.webp", # Oscar Piastri (McLaren) Gabriel Bortoleto
+        "https://static.wikia.nocookie.net/f1wikia/images/0/0f/Doohan2025.png/revision/latest?cb=20250728004628"  # Oliver Bearman (Haas)Jack DOohan
     ]
 
     # 3. BLOQUE SUPERIOR
