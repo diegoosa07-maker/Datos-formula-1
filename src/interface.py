@@ -30,10 +30,27 @@ st.divider()
 
 # --- CARGA DE DATOS ---
 ruta_csv = "data/clean/drivers_list.csv"
+ruta_points = "data/clean/archivo_2.csv"
 
 if os.path.exists(ruta_csv):
     df = pd.read_csv(ruta_csv)
-    col_n = df.columns[0] 
+    col_n = df.columns[0]
+    
+    # Cargar puntos de archivo_2.csv
+    df_points = pd.read_csv(ruta_points)
+    # Crear diccionario de puntos por nombre (normalizar para matching)
+    puntos_dict = {}
+    for idx, row in df_points.iterrows():
+        # Normalizar nombres especiales
+        nombre = row['nombre'].replace('Andrea Kimi', 'Kimi').strip()
+        apellido = row['apellido'].replace('ü', 'u').upper()
+        nombre_normalizado = f"{nombre.upper()} {apellido}"
+        puntos_dict[nombre_normalizado] = row['puntos']
+    
+    # Agregar puntos al dataframe
+    df['puntos'] = df[col_n].apply(lambda x: puntos_dict.get(x.upper(), 0))
+    # Ordenar por puntos (descendente)
+    df = df.sort_values('puntos', ascending=False).reset_index(drop=True) 
 
     # --- MOVER LA LISTA AQUÍ (Antes de usarla en t1) ---
     lista_fotos = [
@@ -78,8 +95,8 @@ if os.path.exists(ruta_csv):
         st.markdown(f'''
             <div class="card">
                 <p style="color:red; margin:0; font-weight:bold;font-size: 20px">ESCUDERÍA LÍDER</p>
-                <img src="https://img.redbull.com/images/c_limit,w_4000/e_trim:1:transparent/c_limit,w_175,h_175/bo_5px_solid_rgb:00000000/q_auto:best,f_auto/redbullcom/2022/2/10/nhzwcy8ouv8jonuxscfx/red-bull-racing-tenant-logo" >
-                <h3 style="margin:10px 0;">RedBull Racing</h3>
+                <img src="https://upload.wikimedia.org/wikipedia/en/thumb/6/66/McLaren_Racing_logo.svg/3840px-McLaren_Racing_logo.svg.png" >
+                <h3 style="margin:10px 0;">McLaren</h3>
             </div>
         ''', unsafe_allow_html=True)
     
@@ -128,6 +145,7 @@ if os.path.exists(ruta_csv):
     for i in range(min(max_display, total_pilotos - st.session_state.carousel_index)):
         idx = st.session_state.carousel_index + i
         nombre = df.iloc[idx][col_n]
+        puntos = int(df.iloc[idx]['puntos'])
         foto_url = lista_fotos[idx] if idx < len(lista_fotos) else "https://www.formula1.com/etc/designs/fom-website/images/helmet-placeholder.png"
         
         with m[i]:
@@ -135,7 +153,7 @@ if os.path.exists(ruta_csv):
                 <div class="card">
                     <img src="{foto_url}" width="130" style="border-radius: 50%; border: 3px solid #e10600; margin-bottom: 10px; object-fit: cover; aspect-ratio: 1/1;">
                     <p style="font-size: 18px;"><b>{nombre}</b></p>
-                    <p style="color:red; font-weight:bold;">{210 - (idx*15)} PTS</p>
+                    <p style="color:red; font-weight:bold;">{puntos} PTS</p>
                 </div>
             """, unsafe_allow_html=True)
 
@@ -161,10 +179,17 @@ if os.path.exists(ruta_csv):
         """, unsafe_allow_html=True)
     with b2:
         st.subheader(" CLASIFICACIÓN DE ESCUDERÍAS:")
-        df_mostrar = df.copy()
+        # Agrupar por escudería y sumar puntos
+        df_teams = df.groupby('Escuderia')['puntos'].sum().reset_index()
+        df_teams.columns = ['Escudería', 'Puntos']
+        df_teams = df_teams.sort_values('Puntos', ascending=False).reset_index(drop=True)
+        
+        # Filtrar por búsqueda si existe
+        df_teams_mostrar = df_teams.copy()
         if busqueda:
-            df_mostrar = df[df.astype(str).apply(lambda x: x.str.contains(busqueda, case=False)).any(axis=1)]
-        st.dataframe(df_mostrar.head(20), width='stretch')
+            df_teams_mostrar = df_teams[df_teams['Escudería'].str.contains(busqueda, case=False)]
+        
+        st.dataframe(df_teams_mostrar, width='stretch')
     st.divider()
     w1 = st.columns(3)[0]
     with w1:
