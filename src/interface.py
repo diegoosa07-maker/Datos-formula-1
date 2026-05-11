@@ -23,14 +23,7 @@ st.markdown("""
     """, unsafe_allow_html=True)
 
 # 2. CABECERA Y BUSCADOR (Igual a tu dibujo)
-logo_col, title_col = st.columns([0.15, 0.85])
-
-with logo_col:
-    st.image("C:\\Users\\Pacho Landin\\Downloads\\Gemini_Generated_Image_rytchdrytchdrytc-removebg-preview.png", width=180)
-
-with title_col:
-    st.markdown('<p class="f1-title"> F1 LIVE HUB: CONSULTA DE ESTADÍSTICA RT</p>', unsafe_allow_html=True)
-
+st.markdown('<p class="f1-title"> FI LIVE HUB: CONSULTA DE ESTADÍSTICA RT</p>', unsafe_allow_html=True)
 busqueda = st.text_input("Buscar", placeholder="🔍 BUSCAR PILOTO, EQUIPO...", label_visibility="collapsed")
 st.divider()
 
@@ -69,7 +62,7 @@ if os.path.exists(ruta_csv):
         st.markdown(f'''
             <div class="card">
                 <p style="color:red; margin:0; font-weight:bold;font-size: 20px">ESCUDERÍA LÍDER</p>
-                <img src="https://img.redbull.com/images/c_limit,w_4000/e_trim:1:transparent/c_limit,w_190,h_190/bo_5px_solid_rgb:00000000/q_auto:best,f_auto/redbullcom/2022/2/10/nhzwcy8ouv8jonuxscfx/red-bull-racing-tenant-logo">
+                <img src="https://img.redbull.com/images/c_limit,w_4000/e_trim:1:transparent/c_limit,w_175,h_175/bo_5px_solid_rgb:00000000/q_auto:best,f_auto/redbullcom/2022/2/10/nhzwcy8ouv8jonuxscfx/red-bull-racing-tenant-logo" >
                 <h3 style="margin:10px 0;">RedBull Racing</h3>
             </div>
         ''', unsafe_allow_html=True)
@@ -78,12 +71,12 @@ if os.path.exists(ruta_csv):
         st.markdown(f"""
             <div class="card">
                 <p style="color:red; margin:0; font-weight:bold; font-size: 20px"> TOP 5 PILOTOS</p>
-                <p style="text-align: center; padding-left: 9px; margin-top: 10px; font-size: 16px;font-weight: bold;">
-                    1. {df.iloc[0][col_n]}<br>
-                    2. {df.iloc[1][col_n]}<br>
-                    3. {df.iloc[2][col_n]}<br>
-                    4. {df.iloc[3][col_n]}<br>
-                    5. {df.iloc[4][col_n]}
+                <p style="text-align: center; padding-left: 9px; margin-top: 10px; font-size: 18.5px;font-weight: bold;">
+                    1º: {df.iloc[0][col_n]}<br>
+                    2º: {df.iloc[1][col_n]}<br>
+                    3º: {df.iloc[2][col_n]}<br>
+                    4º: {df.iloc[3][col_n]}<br>
+                    5º: {df.iloc[4][col_n]}
                 </p>
             </div>
         """, unsafe_allow_html=True)
@@ -130,10 +123,35 @@ if os.path.exists(ruta_csv):
                 </div>
             """, unsafe_allow_html=True)
 
-      # 5. BLOQUE INFERIOR
-st.divider()
-b1, b2 = st.columns([1, 2])
-with b1:
+    # 5. BLOQUE INFERIOR
+    st.divider()
+    b1, b2 = st.columns([1, 2])
+    with b1:
+        st.subheader("ÚLTIMA CARRERA:")
+        st.markdown("""
+        <div style="background-color: rgba(6, 104, 201, 0.2); padding: 15px; border-radius: 8px; color: white;">
+            <p style="font-size: 18px; font-weight: bold; margin: 0 0 10px 0;"><strong>GP DE ARABIA SAUDITA</strong></p>
+            <p style="margin: 0 0 15px 0;">Circuito de Jeddah Corniche</p>
+            <img src="https://upload.wikimedia.org/wikipedia/commons/b/be/Jeddah_Formula_E_Layout.png" style="width:91%; border-radius: 6px; margin-bottom: 10px;">
+            <p style="font-size: 13px; margin: 0; line-height: 1.5;">
+                <strong>Longitud:</strong> 6,174 km<br>
+                <strong>Curvas:</strong> 27<br>
+                <strong>Rectas Principales:</strong> 3 <br><br>
+                <strong>Sector 1:</strong> Curvas 1-4<br>
+                <strong>Sector 2:</strong> Curvas 5-22<br>
+                <strong>Sector 3:</strong> Curvas 23-27
+            </p>
+        </div>
+        """, unsafe_allow_html=True)
+    with b2:
+        st.subheader(" CLASIFICACIÓN DE ESCUDERÍAS:")
+        df_mostrar = df.copy()
+        if busqueda:
+            df_mostrar = df[df.astype(str).apply(lambda x: x.str.contains(busqueda, case=False)).any(axis=1)]
+        st.dataframe(df_mostrar.head(20), width='stretch')
+    st.divider()
+    w1 = st.columns(3)[0]
+    with w1:
         st.subheader(" PRÓXIMA CARRERA:")
         st.markdown("""
         <div style="background-color: rgba(6, 104, 201, 0.2); padding: 15px; border-radius: 8px; color: white;">
@@ -149,14 +167,54 @@ with b1:
                 <strong>Sector 3:</strong> Curvas 17-19
             </p>
         </div>
+        """, unsafe_allow_html=True)   
+    # 6. APARTADO DE AYUDA AL CLIENTE
+    st.divider()
+    
+    st.markdown('<p style="font-size: 24px; font-weight: bold; color: #e10600; margin-bottom: 20px;"> AYUDA AL CLIENTE</p>', unsafe_allow_html=True)
+    
+    # Creamos 3 columnas para organizar el soporte
+    h1, h2, h3 = st.columns(3)
+    
+    with h1:
+        st.markdown("""
+            <div style="background-color: #2b2b2b; padding: 20px; border-radius: 10px; border-top: 4px solid #e10600; min-height: 180px;">
+                <p style="font-weight: bold; font-size: 18px; margin-bottom: 10px;"> Soporte Técnico</p>
+                <p style="font-size: 14px; color: #cccccc;">¿Tienes problemas con la visualización de datos?</p>
+                <p style="font-size: 15px;"><b>Email:</b> soporte@f1livehub.com</p>
+                <p style="font-size: 15px;"><b>Horario:</b> L-V 09:00 - 18:00 CET</p>
+            </div>
         """, unsafe_allow_html=True)
-with b2:
-        st.subheader("CLASIFICACIÓN DE ESCUDERÍAS:")
-        df_mostrar = df.copy()
-        if 'busqueda' in locals() and busqueda:
-            df_mostrar = df[df.astype(str).apply(lambda x: x.str.contains(busqueda, case=False)).any(axis=1)]
         
-        if df_mostrar.empty:
-            st.error(" Ejecuta download.py en T2")
-        else:
-            st.dataframe(df_mostrar.head(20), use_container_width=True)
+    with h2:
+        st.markdown("""
+            <div style="background-color: #2b2b2b; padding: 20px; border-radius: 10px; border-top: 4px solid #e10600; min-height: 180px;">
+                <p style="font-weight: bold; font-size: 18px; margin-bottom: 10px;"> Documentación</p>
+                <p style="font-size: 14px; color: #cccccc;">Consulta nuestras bibliografías para determinar el origen de nuestros datos.</p>
+                <a href="#" style="color: #e10600; text-decoration: none; font-weight: bold;">Ver Manual de Usuario →</a><br> 
+                <a href="#" style="color: #e10600; text-decoration: none; font-weight: bold;">API Reference (Ergast) →</a><br>
+            </div>
+        """, unsafe_allow_html=True) # Tendré que quitar el apartado de manual de usuario y añadir las referencias de a API
+        
+    with h3:
+        st.markdown("""
+            <div style="background-color: #2b2b2b; padding: 20px; border-radius: 10px; border-top: 4px solid #e10600; min-height: 180px;">
+                <p style="font-weight: bold; font-size: 18px; margin-bottom: 10px;"> Legal</p>
+                <p style="font-size: 14px; color: #cccccc;">Información sobre privacidad y términos de servicio.</p>
+                <ul style="font-size: 13px; padding-left: 20px; margin-top: 5px;">
+                    <li>La Página no recolecta información personal del usuario.</li>
+                </ul>
+            </div>
+        """, unsafe_allow_html=True)
+
+    # Footer final
+    st.markdown("""
+        <div style="text-align: center; margin-top: 50px; padding: 20px; color: #555555; font-size: 12px;">
+            <p>© 2026 F1 Live Hub - Este sitio no es oficial y no está asociado de ninguna manera con el grupo de empresas de Fórmula 1.</p>
+        </div>
+    """, unsafe_allow_html=True)
+else:
+   st.error(" Ejecuta download.py en T2")
+
+
+
