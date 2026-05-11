@@ -79,8 +79,8 @@ if os.path.exists(ruta_csv):
         st.markdown(f'''
             <div class="card">
                 <p style="color:red; margin:0; font-weight:bold;font-size: 20px">ESCUDERÍA LÍDER</p>
-                <img src="https://img.redbull.com/images/c_limit,w_4000/e_trim:1:transparent/c_limit,w_175,h_175/bo_5px_solid_rgb:00000000/q_auto:best,f_auto/redbullcom/2022/2/10/nhzwcy8ouv8jonuxscfx/red-bull-racing-tenant-logo" >
-                <h3 style="margin:10px 0;">RedBull Racing</h3>
+                <img src="https://upload.wikimedia.org/wikipedia/en/thumb/6/66/McLaren_Racing_logo.svg/3840px-McLaren_Racing_logo.svg.png" >
+                <h3 style="margin:10px 0;">McLaren</h3>
             </div>
         ''', unsafe_allow_html=True)
     
@@ -163,10 +163,17 @@ if os.path.exists(ruta_csv):
         """, unsafe_allow_html=True)
     with b2:
         st.subheader(" CLASIFICACIÓN DE ESCUDERÍAS:")
-        df_mostrar = df.copy()
+        # Agrupar por escudería y sumar puntos
+        df_teams = df.groupby('Escuderia')['puntos'].sum().reset_index()
+        df_teams.columns = ['Escudería', 'Puntos']
+        df_teams = df_teams.sort_values('Puntos', ascending=False).reset_index(drop=True)
+        
+        # Filtrar por búsqueda si existe
+        df_teams_mostrar = df_teams.copy()
         if busqueda:
-            df_mostrar = df[df.astype(str).apply(lambda x: x.str.contains(busqueda, case=False)).any(axis=1)]
-        st.dataframe(df_mostrar.head(20), width='stretch')
+            df_teams_mostrar = df_teams[df_teams['Escudería'].str.contains(busqueda, case=False)]
+        
+        st.dataframe(df_teams_mostrar, width='stretch')
     st.divider()
     w1 = st.columns(3)[0]
     with w1:
