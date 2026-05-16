@@ -1,9 +1,12 @@
 import os
 import json
 import requests
+import time
 
 def api_request(url):
     headers = {"accept": "application/json"}
+    # Delay de 2 segundos para evitar la saturación de la API
+    time.sleep(2)
     response = requests.get(url, headers=headers)
     return response.json()
 
@@ -11,7 +14,7 @@ def data_writing(file_path, data, mode = 'w'):
     os.makedirs("data/raw", exist_ok=True)
     with open(file_path, mode, encoding="utf-8") as f:
         for element in data:
-          f.write(json.dumps(element) + "\n")
+            f.write(json.dumps(element) + "\n")
             
     print(f"Se guardaron {len(data)} elementos en {file_path}")
 
@@ -23,28 +26,11 @@ drivers_file_path = "data/raw/drivers_data.json"
 data_writing(drivers_file_path, drivers_data)
 
 
-
-# resultados de carreras 2025
-sessions_url = "https://api.openf1.org/v1/sessions?year=2025&session_type=Race"
-sessions_data = api_request(sessions_url)
-for session in sessions_data:
-    session_key = session.get("session_key")
-    
-    # posiciones (session_key no funciona)
-    positions_url = f"https://api.openf1.org/v1/position?session_key={session_key}"
-    positions_data = api_request(positions_url)
-    data_writing(f"data/raw/positions_{session_key}.json", positions_data)
-    
-    # drivers por sesion
-    drivers_url = f"https://api.openf1.org/v1/drivers?session_key={session_key}"
-    drivers_session_data = api_request(drivers_url)
-    data_writing(f"data/raw/drivers_{session_key}.json", drivers_session_data)
-
-# Resultados final de puntos en el año 2023
 driverspoints2023_url = "https://api.openf1.org/v1/championship_drivers?session_key=9197"
 driverspoints2023_data = api_request(driverspoints2023_url)
 driverspoints2023_file_path = "data/raw/driverspoints2023_data.json"
 data_writing(driverspoints2023_file_path, driverspoints2023_data)
+
 
 drivers2023_url = "https://api.openf1.org/v1/drivers?session_key=9197"
 drivers2023_data = api_request(drivers2023_url)
