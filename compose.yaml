@@ -8,11 +8,34 @@
 # database or a cache. For examples, see the Awesome Compose repository:
 # https://github.com/docker/awesome-compose
 services:
-  server:
-    build:
-      context: .
+  downloader:
+    # Docker viaja a esta carpeta para buscar el Dockerfile específico de descarga
+    build: ./servicios/data_downloader
+    volumes:
+      # Conecta tu carpeta local "data" con la ruta "/app/data" dentro del contenedor
+      - ./data:/app/data
+
+  cleaner:
+    # Docker viaja a la carpeta de limpieza
+    build: ./servicios/data_cleaner
+    volumes:
+      - ./data:/app/data
+    depends_on:
+      downloader:
+        # Indica que este contenedor esperará pacientemente a que la descarga termine con éxito
+        condition: service_completed_successfully
+
+  web:
+    # Docker viaja a la carpeta de la aplicación web
+    build: ./servicios/web_app
     ports:
-      - 8000:8000
+      - "8501:8501" # Mapea el puerto de tu PC (izq) al del contenedor (der)
+    volumes:
+      - ./data:/app/data
+    depends_on:
+      cleaner:
+        # Indica que la web esperará a que toda la limpieza de datos haya finalizado
+        condition: service_completed_successfully
 
 # The commented out section below is an example of how to define a PostgreSQL
 # database that your application can use. `depends_on` tells Docker Compose to
