@@ -22,8 +22,17 @@ st.markdown("""
     </style>
     """, unsafe_allow_html=True)
 
-# 2. CABECERA Y BUSCADOR (Igual a tu dibujo)
-st.markdown('<p class="f1-title"> FI LIVE HUB: CONSULTA DE ESTADÍSTICA RT</p>', unsafe_allow_html=True)
+# 2. CABECERA CON LOGO Y TÍTULO
+logo_col, title_col = st.columns([1, 5])
+
+with logo_col:
+    st.image("assets/logo.png", width=100)
+
+with title_col:
+    st.markdown('<p class="f1-title"> FI LIVE HUB: CONSULTA DE ESTADÍSTICA RT</p>', unsafe_allow_html=True)
+
+# 3. BUSCADOR
+st.divider()
 busqueda = st.text_input("Buscar", placeholder="🔍 BUSCAR PILOTO, EQUIPO...", label_visibility="collapsed")
 st.divider()
 
