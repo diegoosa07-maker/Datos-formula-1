@@ -1,3 +1,4 @@
+# Nombre original Archivo 6.py
 # Este código es un versión modificada del archivo clean hecho en clase, los comentarios se encuentran en ese mismo archivo.
 # Nota: Recuerda revisar download.
 import os
@@ -20,7 +21,7 @@ def crear_diccionario_pilotos(file_path):
 
 def json_to_csv_f1(file_path):
     out = []
-    diccionario = crear_diccionario_pilotos('data/raw/drivernumber_2024.json')
+    diccionario = crear_diccionario_pilotos('data/raw/pilotos2024_info.json')
 
     with open(file_path, "r", encoding="utf-8") as f:
         for line in f:
@@ -48,4 +49,4 @@ def json_to_csv_f1(file_path):
         writer.writerows(out)
 
 
-json_to_csv_f1("data/raw/drivers_2024_data.json")
+json_to_csv_f1("data/raw/driverspoints2024_data.json")

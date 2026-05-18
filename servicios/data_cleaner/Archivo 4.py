@@ -1,3 +1,4 @@
+# Nombre original Archivo 4.py
 import os
 import csv
 import json
@@ -30,10 +31,10 @@ def json_to_csv(file_path):
   
     fieldnames = ["Tipo de Carrera", "Comienzo", "Fin", "Nombre del Circuito", "País", "Ubicación"] # Aquí pones el nombre que quieres que tenga el encabezado en el archivo.
     
-    with open("data/clean/sessions_2025.csv", "w", newline="", encoding="utf-8") as csv_file:
+    with open("data/clean/carreras_2025.csv", "w", newline="", encoding="utf-8") as csv_file:
         writer = csv.DictWriter(csv_file, fieldnames=fieldnames, extrasaction="ignore")
         writer.writeheader()
         writer.writerows(out)
 # Cambiar drivers_list por team_data.csv, tanto arriba como abajo
 
-json_to_csv("data/raw/sessions_2025.json")
+json_to_csv("data/raw/carreras_2025.json")

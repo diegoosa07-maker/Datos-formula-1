@@ -1,3 +1,4 @@
+# Nombre original Archivo 1.py
 import os
 import csv
 import json
@@ -32,4 +33,4 @@ def json_to_csv(file_path):
         writer.writerows(out)
 
 
-json_to_csv("data/raw/drivers_data.json")
+json_to_csv("data/raw/pilotos2025_info.json")

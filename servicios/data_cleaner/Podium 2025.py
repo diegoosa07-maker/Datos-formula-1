@@ -1,0 +1,58 @@
+import os
+import json
+import csv
+
+def json_to_json(file_path):
+    out = []
+    diccionario = crear_diccionario_drivers('data/raw/pilotos2025_info.json')
+    with open(file_path, "r", encoding="utf-8") as f:
+        for line in f:
+            if line.strip() and ( line.strip() == "[" or line.strip() == "]" or line.strip() == ""):
+                continue
+            else :
+                guardar = json.loads(line.strip())
+                driver_number = guardar.get("driver_number")
+                fila = {
+                    "driver_number": driver_number,
+                    "full_name": diccionario.get(driver_number, "Unknown"),
+                    "position_current": guardar.get("position_current"),
+                    "points_current": guardar.get("points_current"),
+                }
+                out.append(fila)
+    os.makedirs("data/raw", exist_ok=True)
+    with open("data/raw/driverspodium2025.json", "w", encoding="utf-8") as f:
+        for fila in out:
+            f.write(json.dumps(fila) + "\n")
+
+def crear_diccionario_drivers(file_path):
+    diccionario = {}
+    with open(file_path, "r") as fIn:
+        for line in fIn:
+            line = json.loads(line)
+            diccionario[line["driver_number"]] = line["full_name"]
+    return diccionario
+
+json_to_json("data/raw/driverspoints2025_data.json")
+def json_to_csv(file_path):
+    out = []
+    with open(file_path, "r", encoding="utf-8") as f:
+        for line in f:
+            if line.strip() and ( line.strip() == "[" or line.strip() == "]" or line.strip() == ""):
+                continue
+            else:
+                guardar = json.loads(line.strip())
+                fila = {
+                    "Nombre": guardar.get("full_name"),
+                    "Puntos": guardar.get("points_current")
+                }
+                out.append(fila)
+
+    os.makedirs("data/clean", exist_ok=True)
+    fieldnames = ["Nombre", "Puntos"]
+    with open("data/clean/driverspodium2025.csv", "w", newline="", encoding="utf-8") as csv_file:
+        writer = csv.DictWriter(csv_file, fieldnames=fieldnames, extrasaction="ignore")
+        writer.writeheader()
+        writer.writerows(out)
+
+json_to_json("data/raw/driverspoints2025_data.json")
+json_to_csv("data/raw/driverspodium2025.json")
