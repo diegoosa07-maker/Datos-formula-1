@@ -19,8 +19,8 @@ def json_to_json(file_path):
                 }
                 out.append(fila)
                 
-    os.makedirs("data/raw", exist_ok=True)
-    with open("data/raw/calendario2025.json", "w", encoding="utf-8") as f:
+    os.makedirs("data/raw/calendario", exist_ok=True)
+    with open("data/raw/calendario/calendario2025.json", "w", encoding="utf-8") as f:
         for fila in out:
             f.write(json.dumps(fila) + "\n")
 
@@ -47,5 +47,5 @@ def json_to_csv(file_path):
         writer.writeheader()
         writer.writerows(out)
 
-json_to_json("data/raw/carreras_2025.json")
-json_to_csv("data/raw/calendario2025.json")
+json_to_json("data/raw/carreras/carreras_2025.json")
+json_to_csv("data/raw/calendario/calendario2025.json")

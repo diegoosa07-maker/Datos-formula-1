@@ -17,8 +17,8 @@ def json_to_json(file_path):
                 }
                 out.append(fila)
                 
-    os.makedirs("data/raw", exist_ok=True)
-    with open("data/raw/teamspodium2025.json", "w", encoding="utf-8") as f:
+    os.makedirs("data/raw/podium", exist_ok=True)
+    with open("data/raw/podium/teamspodium2025.json", "w", encoding="utf-8") as f:
         for fila in out:
             f.write(json.dumps(fila) + "\n")
 
@@ -39,11 +39,11 @@ def json_to_csv(file_path):
 
     os.makedirs("data/clean", exist_ok=True)
     fieldnames = ["Escudería", "Puntos"]
-    with open("data/clean/teamspodium2023.csv", "w", newline="", encoding="utf-8") as csv_file:
+    with open("data/clean/teamspodium2025.csv", "w", newline="", encoding="utf-8") as csv_file:
         writer = csv.DictWriter(csv_file, fieldnames=fieldnames, extrasaction="ignore")
         writer.writeheader()
         writer.writerows(out)
 
 
-json_to_json("data/raw/teamspoints2025_data.json")
-json_to_csv("data/raw/teamspodium2025.json")
+json_to_json("data/raw/puntos/teamspoints2025_data.json")
+json_to_csv("data/raw/podium/teamspodium2025.json")
