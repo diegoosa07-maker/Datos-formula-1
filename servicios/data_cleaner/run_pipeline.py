@@ -25,7 +25,16 @@ if __name__ == "__main__":
         "Archivo 4.py",
         "Podium 2023.py",
         "Archivo 6.py",
-        "archivo 7.py"
+        "archivo 7.py",
+        "Podium 2024.py",
+        "Podium 2025.py",
+        "Podium team 2023.py",
+        "Podium team 2024.py",
+        "Podium team 2025.py",
+        "Calendario 2023.py",
+        "Calendario 2024.py",
+        "Calendario 2025.py",
+        "Calendario 2026.py"
         ]
     for script in pipeline:
         ejecutar_script(script)

@@ -4,7 +4,7 @@ import csv
 
 def json_to_json(file_path):
     out = []
-    diccionario = crear_diccionario_drivers('data/raw/pilotos2024_info.json')
+    diccionario = crear_diccionario_drivers('data/raw/info/pilotos2024_info.json')
     with open(file_path, "r", encoding="utf-8") as f:
         for line in f:
             if line.strip() and ( line.strip() == "[" or line.strip() == "]" or line.strip() == ""):
@@ -20,7 +20,7 @@ def json_to_json(file_path):
                 }
                 out.append(fila)
     os.makedirs("data/raw", exist_ok=True)
-    with open("data/raw/driverspodium2024.json", "w", encoding="utf-8") as f:
+    with open("data/raw/podium/driverspodium2024.json", "w", encoding="utf-8") as f:
         for fila in out:
             f.write(json.dumps(fila) + "\n")
 
@@ -32,7 +32,7 @@ def crear_diccionario_drivers(file_path):
             diccionario[line["driver_number"]] = line["full_name"]
     return diccionario
 
-json_to_json("data/raw/driverspoints2024_data.json")
+json_to_json("data/raw/puntos/driverspoints2024_data.json")
 def json_to_csv(file_path):
     out = []
     with open(file_path, "r", encoding="utf-8") as f:
@@ -54,5 +54,5 @@ def json_to_csv(file_path):
         writer.writeheader()
         writer.writerows(out)
 
-json_to_json("data/raw/driverspoints2024_data.json")
-json_to_csv("data/raw/driverspodium2024.json")
+json_to_json("data/raw/puntos/driverspoints2024_data.json")
+json_to_csv("data/raw/podium/driverspodium2024.json")

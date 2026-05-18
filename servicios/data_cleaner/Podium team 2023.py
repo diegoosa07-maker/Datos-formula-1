@@ -17,8 +17,8 @@ def json_to_json(file_path):
                 }
                 out.append(fila)
                 
-    os.makedirs("data/raw", exist_ok=True)
-    with open("data/raw/teamspodium2023.json", "w", encoding="utf-8") as f:
+    os.makedirs("data/raw/podium", exist_ok=True)
+    with open("data/raw/podium/teamspodium2023.json", "w", encoding="utf-8") as f:
         for fila in out:
             f.write(json.dumps(fila) + "\n")
 
@@ -45,5 +45,5 @@ def json_to_csv(file_path):
         writer.writerows(out)
 
 
-json_to_json("data/raw/teamspoints2023_data.json")
-json_to_csv("data/raw/teamspodium2023.json")
+json_to_json("data/raw/puntos/teamspoints2023_data.json")
+json_to_csv("data/raw/podium/teamspodium2023.json")
