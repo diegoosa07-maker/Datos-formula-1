@@ -25,7 +25,6 @@ if __name__ == "__main__":
         "Archivo 4.py",
         "Podium 2023.py",
         "Archivo 6.py",
-        "archivo 7.py",
         "Podium 2024.py",
         "Podium 2025.py",
         "Podium team 2023.py",
