@@ -1,0 +1,24 @@
+Circuito,País,Fecha Inicio,Año,Cancelado
+Sakhir,Bahrain,2023-03-05T15:00:00+00:00,2023,False
+Jeddah,Saudi Arabia,2023-03-19T17:00:00+00:00,2023,False
+Melbourne,Australia,2023-04-02T05:00:00+00:00,2023,False
+Baku,Azerbaijan,2023-04-30T11:00:00+00:00,2023,False
+Miami,United States,2023-05-07T19:30:00+00:00,2023,False
+Imola,Italy,2023-05-21T13:00:00+00:00,2023,True
+Monte Carlo,Monaco,2023-05-28T13:00:00+00:00,2023,False
+Catalunya,Spain,2023-06-04T13:00:00+00:00,2023,False
+Montreal,Canada,2023-06-18T18:00:00+00:00,2023,False
+Spielberg,Austria,2023-07-02T13:00:00+00:00,2023,False
+Silverstone,United Kingdom,2023-07-09T14:00:00+00:00,2023,False
+Hungaroring,Hungary,2023-07-23T13:00:00+00:00,2023,False
+Spa-Francorchamps,Belgium,2023-07-30T13:00:00+00:00,2023,False
+Zandvoort,Netherlands,2023-08-27T13:00:00+00:00,2023,False
+Monza,Italy,2023-09-03T13:00:00+00:00,2023,False
+Singapore,Singapore,2023-09-17T12:00:00+00:00,2023,False
+Suzuka,Japan,2023-09-24T05:00:00+00:00,2023,False
+Lusail,Qatar,2023-10-08T17:00:00+00:00,2023,False
+Austin,United States,2023-10-22T19:00:00+00:00,2023,False
+Mexico City,Mexico,2023-10-29T20:00:00+00:00,2023,False
+Interlagos,Brazil,2023-11-05T17:00:00+00:00,2023,False
+Las Vegas,United States,2023-11-19T06:00:00+00:00,2023,False
+Yas Marina Circuit,United Arab Emirates,2023-11-26T13:00:00+00:00,2023,False

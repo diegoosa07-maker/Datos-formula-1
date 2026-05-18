@@ -1,3 +1,4 @@
+# Nombre original Archivo 3.py
 import os
 import csv
 import json
@@ -32,4 +33,4 @@ def json_to_csv(file_path):
         writer.writerows(out)
 # Cambiar drivers_list por team_data.csv, tanto arriba como abajo
 
-json_to_csv("data/raw/team_info.json")
+json_to_csv("data/raw/teamspoints2025_data.json")

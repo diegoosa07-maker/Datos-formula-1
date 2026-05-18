@@ -1,0 +1,24 @@
+{"circuit_short_name": "Melbourne", "country_name": "Australia", "date_start": "2026-03-08T04:00:00+00:00", "year": 2026, "is_cancelled": false}
+{"circuit_short_name": "Shanghai", "country_name": "China", "date_start": "2026-03-15T07:00:00+00:00", "year": 2026, "is_cancelled": false}
+{"circuit_short_name": "Suzuka", "country_name": "Japan", "date_start": "2026-03-29T05:00:00+00:00", "year": 2026, "is_cancelled": false}
+{"circuit_short_name": "Sakhir", "country_name": "Bahrain", "date_start": "2026-04-12T15:00:00+00:00", "year": 2026, "is_cancelled": true}
+{"circuit_short_name": "Jeddah", "country_name": "Saudi Arabia", "date_start": "2026-04-19T17:00:00+00:00", "year": 2026, "is_cancelled": true}
+{"circuit_short_name": "Miami", "country_name": "United States", "date_start": "2026-05-03T17:00:00+00:00", "year": 2026, "is_cancelled": false}
+{"circuit_short_name": "Montreal", "country_name": "Canada", "date_start": "2026-05-24T20:00:00+00:00", "year": 2026, "is_cancelled": false}
+{"circuit_short_name": "Monte Carlo", "country_name": "Monaco", "date_start": "2026-06-07T13:00:00+00:00", "year": 2026, "is_cancelled": false}
+{"circuit_short_name": "Catalunya", "country_name": "Spain", "date_start": "2026-06-14T13:00:00+00:00", "year": 2026, "is_cancelled": false}
+{"circuit_short_name": "Spielberg", "country_name": "Austria", "date_start": "2026-06-28T13:00:00+00:00", "year": 2026, "is_cancelled": false}
+{"circuit_short_name": "Silverstone", "country_name": "United Kingdom", "date_start": "2026-07-05T14:00:00+00:00", "year": 2026, "is_cancelled": false}
+{"circuit_short_name": "Spa-Francorchamps", "country_name": "Belgium", "date_start": "2026-07-19T13:00:00+00:00", "year": 2026, "is_cancelled": false}
+{"circuit_short_name": "Hungaroring", "country_name": "Hungary", "date_start": "2026-07-26T13:00:00+00:00", "year": 2026, "is_cancelled": false}
+{"circuit_short_name": "Zandvoort", "country_name": "Netherlands", "date_start": "2026-08-23T13:00:00+00:00", "year": 2026, "is_cancelled": false}
+{"circuit_short_name": "Monza", "country_name": "Italy", "date_start": "2026-09-06T13:00:00+00:00", "year": 2026, "is_cancelled": false}
+{"circuit_short_name": "Madring", "country_name": "Spain", "date_start": "2026-09-13T13:00:00+00:00", "year": 2026, "is_cancelled": false}
+{"circuit_short_name": "Baku", "country_name": "Azerbaijan", "date_start": "2026-09-26T11:00:00+00:00", "year": 2026, "is_cancelled": false}
+{"circuit_short_name": "Singapore", "country_name": "Singapore", "date_start": "2026-10-11T12:00:00+00:00", "year": 2026, "is_cancelled": false}
+{"circuit_short_name": "Austin", "country_name": "United States", "date_start": "2026-10-25T20:00:00+00:00", "year": 2026, "is_cancelled": false}
+{"circuit_short_name": "Mexico City", "country_name": "Mexico", "date_start": "2026-11-01T20:00:00+00:00", "year": 2026, "is_cancelled": false}
+{"circuit_short_name": "Interlagos", "country_name": "Brazil", "date_start": "2026-11-08T17:00:00+00:00", "year": 2026, "is_cancelled": false}
+{"circuit_short_name": "Las Vegas", "country_name": "United States", "date_start": "2026-11-22T04:00:00+00:00", "year": 2026, "is_cancelled": false}
+{"circuit_short_name": "Lusail", "country_name": "Qatar", "date_start": "2026-11-29T16:00:00+00:00", "year": 2026, "is_cancelled": false}
+{"circuit_short_name": "Yas Marina Circuit", "country_name": "United Arab Emirates", "date_start": "2026-12-06T13:00:00+00:00", "year": 2026, "is_cancelled": false}

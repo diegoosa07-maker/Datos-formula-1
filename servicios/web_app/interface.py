@@ -24,39 +24,22 @@ st.markdown("""
     </style>
     """, unsafe_allow_html=True)
 
-# 2. CABECERA CON LOGO Y TÍTULO
-logo_path = os.path.join(os.path.dirname(__file__), "../../assets/logo.png")
-logo_col, title_col = st.columns([1, 5])
-
-with logo_col:
-    if os.path.exists(logo_path):
-        st.image(logo_path, width=100)
-
-with title_col:
-    st.markdown('<p class="f1-title"> FI LIVE HUB: CONSULTA DE ESTADÍSTICA RT</p>', unsafe_allow_html=True)
-
-# 3. BUSCADOR
-st.divider()
+# 2. CABECERA CON LOGO Y TÍTULO 
+col_logo, col_titulo = st.columns([1, 9])
+with col_logo:
+    ruta_logo = "data/pics/logo.png"
+    if os.path.exists(ruta_logo):
+        # El parámetro width controla el tamaño exacto del logo para que no se desparrame
+        st.image(ruta_logo, width=75)
+with col_titulo:
+    st.markdown('<p class="f1-title">F1 LIVE HUB: CONSULTA DE ESTADÍSTICA RT</p>', unsafe_allow_html=True)
 busqueda = st.text_input("Buscar", placeholder="🔍 BUSCAR PILOTO, EQUIPO...", label_visibility="collapsed")
 st.divider()
 
-# Diccionario de logos de equipos
-logos_equipos = {
-    "Red Bull Racing": "https://upload.wikimedia.org/wikipedia/en/thumb/f/fa/Red_Bull_Racing_Logo_2026.svg/500px-Red_Bull_Racing_Logo_2026.svg.png",
-    "McLaren": "https://upload.wikimedia.org/wikipedia/en/0/03/McLarenF1Team.png",
-    "Mercedes": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/fc/Mercedes-AMG_Petronas_F1_Team_logo_%282026%29.svg/500px-Mercedes-AMG_Petronas_F1_Team_logo_%282026%29.svg.png",
-    "Ferrari": "https://upload.wikimedia.org/wikipedia/en/thumb/d/df/Scuderia_Ferrari_HP_logo_24.svg/500px-Scuderia_Ferrari_HP_logo_24.svg.png",
-    "Aston Martin": "https://upload.wikimedia.org/wikipedia/en/1/15/Aston_Martin_Aramco_2024_logo.png",
-    "Alpine": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4a/BWT_Alpine_F1_Team_Logo.png/500px-BWT_Alpine_F1_Team_Logo.png",
-    "Williams": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/12/Atlassian_Williams_F1_Team_logo.svg/500px-Atlassian_Williams_F1_Team_logo.svg.png",
-    "Sauber": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/94/Logo_sauber_2023.jpg/500px-Logo_sauber_2023.jpg",
-    "Haas": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/18/TGR_Haas_F1_Team_Logo_%282026%29.svg/500px-TGR_Haas_F1_Team_Logo_%282026%29.svg.png",
-    "RB": "https://upload.wikimedia.org/wikipedia/en/thumb/2/2b/VCARB_F1_logo.svg/1920px-VCARB_F1_logo.svg.png"
-}
 
 # --- CARGA DE DATOS ---
-ruta_csv = os.path.join(os.path.dirname(__file__), "../../data/clean/drivers_list.csv")
-ruta_points = os.path.join(os.path.dirname(__file__), "../../data/clean/archivo_2.csv")
+ruta_csv = "data/clean/drivers_list.csv"
+ruta_points = "data/clean/archivo_2.csv"
 
 if os.path.exists(ruta_csv):
     df = pd.read_csv(ruta_csv)
@@ -102,126 +85,90 @@ if os.path.exists(ruta_csv):
         "https://static.wikia.nocookie.net/f1wikia/images/0/0f/Doohan2025.png/revision/latest?cb=20250728004628"  # Jack DOohan
     ]
 
-    # Crear tabs
-    tab1, tab2 = st.tabs(["📊 INICIO", "🏁 EQUIPOS"])
+    # 3. BLOQUE SUPERIOR
+    t1, t2, t3 = st.columns(3)
+    col_vacia_izq, t1, t2, t3, col_vacia_der = st.columns([1, 3, 3, 3, 1])
+    with t1:
+        # Ahora sí, lista_fotos ya existe
+        foto_lider = lista_fotos[0]
+        st.markdown(f"""
+            <div class="card">
+                <p style="color:red; margin:0; font-weight:bold; font-size: 20px">LÍDER CAMPEONATO</p>
+                <img src="{foto_lider}" width="100" style="border-radius: 50%; border: 3px solid #e10600; margin: 10px 0; object-fit: cover; aspect-ratio: 1/1;">
+                <h3>{df.iloc[0][col_n]}</h3>
+            </div>
+        """, unsafe_allow_html=True)
+    
+    with t2:
+        # Metemos el nombre y la imagen dentro del mismo st.markdown para que hereden el estilo de la tarjeta
+        st.markdown(f'''
+            <div class="card">
+                <p style="color:red; margin:0; font-weight:bold;font-size: 20px">ESCUDERÍA LÍDER</p>
+                <img src="https://upload.wikimedia.org/wikipedia/en/thumb/6/66/McLaren_Racing_logo.svg/3840px-McLaren_Racing_logo.svg.png" >
+                <h3 style="margin:10px 0;">McLaren</h3>
+            </div>
+        ''', unsafe_allow_html=True)
+    
+    with t3:
+        st.markdown(f"""
+            <div class="card">
+                <p style="color:red; margin:0; font-weight:bold; font-size: 20px"> TOP 5 PILOTOS</p>
+                <p style="text-align: center; padding-left: 9px; margin-top: 10px; font-size: 18.5px;font-weight: bold;">
+                    1º: {df.iloc[0][col_n]}<br>
+                    2º: {df.iloc[1][col_n]}<br>
+                    3º: {df.iloc[2][col_n]}<br>
+                    4º: {df.iloc[3][col_n]}<br>
+                    5º: {df.iloc[4][col_n]}
+                </p>
+            </div>
+        """, unsafe_allow_html=True)
 
-    with tab1:
-        # 3. BLOQUE SUPERIOR
-        col_vacia_izq, t1, t2, t3, col_vacia_der = st.columns([1, 3, 3, 3, 1])
-        with t1:
-            # Ahora sí, lista_fotos ya existe
-            foto_lider = lista_fotos[0]
+    # CARRUSEL DE PILOTOS
+    if 'carousel_index' not in st.session_state:
+        st.session_state.carousel_index = 0
+    
+    max_display = 4
+    total_pilotos = len(df)
+    
+    # Botones de navegación
+    col_nav_left, col_nav_center, col_nav_right = st.columns([1, 3, 1])
+    
+    with col_nav_left:
+        if st.button("◀ Anterior", key="prev_carousel"):
+            st.session_state.carousel_index = max(0, st.session_state.carousel_index - max_display)
+    
+    with col_nav_center:
+        pilotos_mostrados = min(max_display, total_pilotos - st.session_state.carousel_index)
+        inicio = st.session_state.carousel_index + 1
+        fin = st.session_state.carousel_index + pilotos_mostrados
+        st.markdown(f"<p style='text-align: center; color: #e10600;'><b>Pilotos {inicio} - {fin} de {total_pilotos}</b></p>", unsafe_allow_html=True)
+    
+    with col_nav_right:
+        if st.button("Siguiente ▶", key="next_carousel"):
+            if st.session_state.carousel_index + max_display < total_pilotos:
+                st.session_state.carousel_index += max_display
+    
+    # Mostrar tarjetas del carrusel
+    m = st.columns(4)
+    
+    for i in range(min(max_display, total_pilotos - st.session_state.carousel_index)):
+        idx = st.session_state.carousel_index + i
+        nombre = df.iloc[idx][col_n]
+        puntos = int(df.iloc[idx]['puntos'])
+        foto_url = lista_fotos[idx] if idx < len(lista_fotos) else "https://www.formula1.com/etc/designs/fom-website/images/helmet-placeholder.png"
+        
+        with m[i]:
             st.markdown(f"""
                 <div class="card">
-                    <p style="color:red; margin:0; font-weight:bold; font-size: 20px">LÍDER CAMPEONATO</p>
-                    <img src="{foto_lider}" width="100" style="border-radius: 50%; border: 3px solid #e10600; margin: 10px 0; object-fit: cover; aspect-ratio: 1/1;">
-                    <h3>{df.iloc[0][col_n]}</h3>
+                    <img src="{foto_url}" width="130" style="border-radius: 50%; border: 3px solid #e10600; margin-bottom: 10px; object-fit: cover; aspect-ratio: 1/1;">
+                    <p style="font-size: 18px;"><b>{nombre}</b></p>
+                    <p style="color:red; font-weight:bold;">{puntos} PTS</p>
                 </div>
             """, unsafe_allow_html=True)
-        
-        with t2:
-            # Metemos el nombre y la imagen dentro del mismo st.markdown para que hereden el estilo de la tarjeta
-            st.markdown(f'''
-                <div class="card">
-                    <p style="color:red; margin:0; font-weight:bold;font-size: 20px">ESCUDERÍA LÍDER</p>
-                    <img src="https://upload.wikimedia.org/wikipedia/en/thumb/6/66/McLaren_Racing_logo.svg/3840px-McLaren_Racing_logo.svg.png" >
-                    <h3 style="margin:10px 0;">McLaren</h3>
-                </div>
-            ''', unsafe_allow_html=True)
-        
-        with t3:
-            st.markdown(f"""
-                <div class="card">
-                    <p style="color:red; margin:0; font-weight:bold; font-size: 20px"> TOP 5 PILOTOS</p>
-                    <p style="text-align: center; padding-left: 9px; margin-top: 10px; font-size: 18.5px;font-weight: bold;">
-                        1º: {df.iloc[0][col_n]}<br>
-                        2º: {df.iloc[1][col_n]}<br>
-                        3º: {df.iloc[2][col_n]}<br>
-                        4º: {df.iloc[3][col_n]}<br>
-                        5º: {df.iloc[4][col_n]}
-                    </p>
-                </div>
-            """, unsafe_allow_html=True)
-
-        # CARRUSEL DE PILOTOS
-        if 'carousel_index' not in st.session_state:
-            st.session_state.carousel_index = 0
-        
-        max_display = 4
-        total_pilotos = len(df)
-        
-        # Botones de navegación
-        col_nav_left, col_nav_center, col_nav_right = st.columns([1, 3, 1])
-        
-        with col_nav_left:
-            if st.button("◀ Anterior", key="prev_carousel"):
-                st.session_state.carousel_index = max(0, st.session_state.carousel_index - max_display)
-        
-        with col_nav_center:
-            pilotos_mostrados = min(max_display, total_pilotos - st.session_state.carousel_index)
-            inicio = st.session_state.carousel_index + 1
-            fin = st.session_state.carousel_index + pilotos_mostrados
-            st.markdown(f"<p style='text-align: center; color: #e10600;'><b>Pilotos {inicio} - {fin} de {total_pilotos}</b></p>", unsafe_allow_html=True)
-        
-        with col_nav_right:
-            if st.button("Siguiente ▶", key="next_carousel"):
-                if st.session_state.carousel_index + max_display < total_pilotos:
-                    st.session_state.carousel_index += max_display
-        
-        # Mostrar tarjetas del carrusel
-        m = st.columns(4)
-        
-        for i in range(min(max_display, total_pilotos - st.session_state.carousel_index)):
-            idx = st.session_state.carousel_index + i
-            nombre = df.iloc[idx][col_n]
-            puntos = int(df.iloc[idx]['puntos'])
-            foto_url = lista_fotos[idx] if idx < len(lista_fotos) else "https://www.formula1.com/etc/designs/fom-website/images/helmet-placeholder.png"
-            
-            with m[i]:
-                st.markdown(f"""
-                    <div class="card">
-                        <img src="{foto_url}" width="130" style="border-radius: 50%; border: 3px solid #e10600; margin-bottom: 10px; object-fit: cover; aspect-ratio: 1/1;">
-                        <p style="font-size: 18px;"><b>{nombre}</b></p>
-                        <p style="color:red; font-weight:bold;">{puntos} PTS</p>
-                    </div>
-                """, unsafe_allow_html=True)
-
-    with tab2:
-        # TAB DE EQUIPOS
-        st.subheader("CLASIFICACIÓN DE EQUIPOS")
-        
-        # Agrupar por escudería y sumar puntos
-        df_teams = df.groupby('Escuderia')['puntos'].sum().reset_index()
-        df_teams.columns = ['Escudería', 'Puntos']
-        df_teams = df_teams.sort_values('Puntos', ascending=False).reset_index(drop=True)
-        
-        # Agregar ranking
-        df_teams.insert(0, 'Posición', range(1, len(df_teams) + 1))
-        
-        # Mostrar equipos con logos
-        cols = st.columns(5)
-        col_idx = 0
-        
-        for idx, row in df_teams.iterrows():
-            equipo = row['Escudería']
-            puntos = int(row['Puntos'])
-            posicion = row['Posición']
-            logo_url = logos_equipos.get(equipo, "https://via.placeholder.com/150")
-            
-            with cols[col_idx % 5]:
-                st.markdown(f"""
-                    <div class="card">
-                        <p style="color:red; margin:0; font-weight:bold; font-size: 24px">#{posicion}</p>
-                        <img src="{logo_url}" style="max-height: 80px; object-fit: contain; margin: 10px 0;">
-                        <p style="font-size: 16px; font-weight: bold; margin: 10px 0;">{equipo}</p>
-                        <p style="color:red; font-weight:bold; font-size: 18px;">{puntos} PTS</p>
-                    </div>
-                """, unsafe_allow_html=True)
-            col_idx += 1
 
     # 5. BLOQUE INFERIOR
     st.divider()
-    b1, b2 = st.columns([1, 1])
+    b1, b2 = st.columns([1, 2])
     with b1:
         st.subheader("ÚLTIMA CARRERA:")
         st.markdown("""
@@ -240,6 +187,21 @@ if os.path.exists(ruta_csv):
         </div>
         """, unsafe_allow_html=True)
     with b2:
+        st.subheader(" CLASIFICACIÓN DE ESCUDERÍAS:")
+        # Agrupar por escudería y sumar puntos
+        df_teams = df.groupby('Escuderia')['puntos'].sum().reset_index()
+        df_teams.columns = ['Escudería', 'Puntos']
+        df_teams = df_teams.sort_values('Puntos', ascending=False).reset_index(drop=True)
+        
+        # Filtrar por búsqueda si existe
+        df_teams_mostrar = df_teams.copy()
+        if busqueda:
+            df_teams_mostrar = df_teams[df_teams['Escudería'].str.contains(busqueda, case=False)]
+        
+        st.dataframe(df_teams_mostrar, width='stretch')
+    st.divider()
+    w1, w2 = st.columns(2)
+    with w1:
         st.subheader(" PRÓXIMA CARRERA:")
         st.markdown("""
         <div style="background-color: rgba(6, 104, 201, 0.2); padding: 15px; border-radius: 8px; color: white;">
@@ -255,8 +217,15 @@ if os.path.exists(ruta_csv):
                 <strong>Sector 3:</strong> Curvas 17-19
             </p>
         </div>
-        """, unsafe_allow_html=True)
-    
+        """, unsafe_allow_html=True)   
+    with w2:
+        st.subheader("CALENDARIO DE CARRERAS:")
+        calendario_path= "data/clean/calendario.csv"
+        if os.path.exists(calendario_path):
+            df_calendario = pd.read_csv(calendario_path)
+            st.dataframe(df_calendario, use_container_width=True, hide_index=True, height=465)
+        else:
+            st.warning("Archivo calendario.csv no encontrado en data/clean/")
     # 6. APARTADO DE AYUDA AL CLIENTE
     st.divider()
     
@@ -304,6 +273,7 @@ if os.path.exists(ruta_csv):
     """, unsafe_allow_html=True)
 else:
    st.error(" Ejecuta download.py en T2")
+
 
 
 
