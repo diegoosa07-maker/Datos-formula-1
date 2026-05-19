@@ -1,279 +1,289 @@
+# IMPORTANTE: Este código uso tanto python como HTML para mejorar la estética, el video tutorial de HTML lo tienes en whatsapp por si necesitas repasar
 import streamlit as st
 import pandas as pd
 import os
-import datetime 
+import base64
 
-# 1. CONFIGURACIÓN
+# 0. CONFIGURACIÓN DE LA PÁGINA Y HOJA DE ESTILOS (CSS)
 st.set_page_config(page_title="F1 Live Hub", layout="wide")
-
 st.markdown("""
     <style>
+    /* Cambia el color de fondo general de la app a negro F1 (#15151e) y texto blanco */
     .main { background-color: #15151e; color: white; }
     .stApp { background-color: #15151e; }
-    .card {
-        background-color: #2b2b2b;
-        padding: 15px;
-        border-radius: 10px;
-        border-left: 5px solid #e10600;
-        margin-bottom: 10px;
-        text-align: center;
-        min-height: 220px;
+    
+    /* NUEVA CLASE: Contenedor tipo rectángulo redondeado para el título principal */
+    .title-card {
+        background-color: #2b2b2b;        /* Mismo gris oscuro que las tarjetas de datos */
+        padding: 10px 25px;                /* Espaciado interno (arriba/abajo e izquierda/derecha) */
+        border-radius: 10px;               /* Bordes redondeados idénticos al resto de la web */
+        border: 2px solid #e10600;         /* Borde completo exterior con el rojo oficial F1 */
+        display: inline-block;             /* Ajusta el tamaño de la caja al tamaño del texto */
+        margin-top: 10px;                  /* Separación con el margen superior de la página */
     }
-    /* Quitamos el text-align: center para que se alinee de forma natural con el logo */
-    .f1-title { font-size: 30px; font-weight: bold; color: #e10600; margin-top: 15px; }
+    
+    /* Ajustes específicos para el texto del título dentro del nuevo contenedor */
+    .f1-title { 
+        font-size: 28px; 
+        font-weight: bold; 
+        color: #ffffff;                    /* Cambiado a blanco para que resalte sobre el borde rojo */
+        margin: 0;                         /* Elimina márgenes por defecto para centrar el texto en la caja */
+        letter-spacing: 1px;               /* Un toque sutil de separación de letras estilo racing */
+    }
+    
+    /* Clase personalizada para las tarjetas de información */
+    .card {
+        background-color: #2b2b2b;        /* Gris oscuro de contraste */
+        padding: 15px;                     /* Espaciado interno */
+        border-radius: 10px;               /* Bordes redondeados */
+        border-left: 5px solid #e10600;    /* Detalle del borde rojo de F1 a la izquierda */
+        margin-bottom: 10px;               /* Separación con elementos inferiores */
+        text-align: center;                /* Centra textos e imágenes por defecto */
+        min-height: 240px;                 /* Altura mínima para homogeneizar el carrusel */
+    }
+    
+    /* Configuración del círculo rojo para las fotos de los pilotos */
+    .driver-photo {
+        border-radius: 50%;                /* Recorte circular perfecto (requiere aspecto 1:1) */
+        border: 3px solid #e10600;         /* Aro de color rojo rodeando la foto */
+        margin: 10px auto;                 /* Centra la imagen horizontalmente con márgenes */
+        object-fit: cover;                 /* Evita que la imagen se deforme al reescalar */
+        aspect-ratio: 1/1;                 /* Fuerza a que el ancho y el alto sean idénticos */
+        display: block;                    /* Permite aplicar los márgenes automáticos */
+    }
     </style>
     """, unsafe_allow_html=True)
 
-# 2. CABECERA CON LOGO Y TÍTULO 
-col_logo, col_titulo = st.columns([1, 9])
+
+# FUNCIONES IA: Estas funciones han sido creadas por la IA para facilitarnos el uso de imágenes locales en streamlit y evitando conflictos con HTML
+def obtener_img_html(ruta_o_url, width=120):
+    if ruta_o_url.startswith("http"):
+        return f'<img src="{ruta_o_url}" width="{width}" class="driver-photo">'
+    if os.path.exists(ruta_o_url):
+        with open(ruta_o_url, "rb") as image_file:
+            encoded_string = base64.b64encode(image_file.read()).decode()
+            return f'<img src="data:image/png;base64,{encoded_string}" width="{width}" class="driver-photo">'     
+    placeholder = "https://www.formula1.com/etc/designs/fom-website/images/helmet-placeholder.png"
+    return f'<img src="{placeholder}" width="{width}" class="driver-photo">'
+def obtener_ruta_foto(nombre_piloto):
+    carpeta_pics = "data/pics/"
+    nombre_archivo_base = os.path.join(carpeta_pics, nombre_piloto.strip())
+    extensiones = ['.png', '.jpg', '.avif', '.webp', '.jpeg']
+    for ext in extensiones:
+        ruta_completa = f"{nombre_archivo_base}{ext}"
+        if os.path.exists(ruta_completa):
+            return ruta_completa  
+    return "https://www.formula1.com/etc/designs/fom-website/images/helmet-placeholder.png"
+
+
+# 1. ESTRUCTURA PRINCIPAL: TÍTULO, LOGO, SELECTOR DE TEMPORADAS Y BARRA DE BUSQUEDA
+col_logo, col_titulo, col_selector = st.columns([1, 7, 2])
 with col_logo:
     ruta_logo = "data/pics/logo.png"
     if os.path.exists(ruta_logo):
-        # El parámetro width controla el tamaño exacto del logo para que no se desparrame
-        st.image(ruta_logo, width=75)
+        st.image(ruta_logo, width=75) # Logo estático en la esquina izquierda
+# 1.1 TÍTULO DE LA PÁGINA
 with col_titulo:
-    st.markdown('<p class="f1-title">F1 LIVE HUB: CONSULTA DE ESTADÍSTICA RT</p>', unsafe_allow_html=True)
-busqueda = st.text_input("Buscar", placeholder="🔍 BUSCAR PILOTO, EQUIPO...", label_visibility="collapsed")
-st.divider()
+    st.markdown("""
+        <div class="title-card">
+            <p class="f1-title">F1 LIVE HUB: CONSULTA DE ESTADÍSTICA RT</p>
+        </div>
+    """, unsafe_allow_html=True)
+# 1.2 SELECTOR DE TEMPORADAS
+with col_selector:
+    # Despliega un menú de las temporadas disponibles.
+    temporada = st.selectbox("TEMPORADA", ["2023", "2024", "2025"], index=2) # La variable temporada se usará con gran frecuencia para filtrar y cargar datos correspondientes a cada año
+# 1.3 BARRA DE BUSQUEDA
+busqueda = st.text_input("Buscar", placeholder="🔍 BUSCAR PILOTO, EQUIPO...", label_visibility="collapsed") # La barra de busqueda aún no es funcional
+st.divider() # Línea divisora, es meramente decorativa, no tiene una función importante
 
 
-# --- CARGA DE DATOS ---
-ruta_csv = "data/clean/drivers_list.csv"
-ruta_points = "data/clean/archivo_2.csv"
+# 2. SECCIÓN DE PODIUMS Y CARRUSEL DE PILOTOS
+# 2.1 CARGA DE DATOS DESDE CSV:
+ruta_drivers_csv = f"data/clean/driverspodium{temporada}.csv" # Cargamos los datos desde sus correspondientes csv, haciendo uso de la variable temporada
+ruta_teams_csv = f"data/clean/teamspodium{temporada}.csv" #     para cargar el año seleccionado en el menú desplegable
+calendario_path = "data/clean/calendario.csv"
+# Esos tres archivos contienen el podio para los pilotos, las escuderías y el calendario de carreras
 
-if os.path.exists(ruta_csv):
-    df = pd.read_csv(ruta_csv)
-    col_n = df.columns[0]
-    
-    # Cargar puntos de archivo_2.csv
-    df_points = pd.read_csv(ruta_points)
-    # Crear diccionario de puntos por nombre (normalizar para matching)
-    puntos_dict = {}
-    for idx, row in df_points.iterrows():
-        # Normalizar nombres especiales
-        nombre = row['nombre'].replace('Andrea Kimi', 'Kimi').strip()
-        apellido = row['apellido'].replace('ü', 'u').upper()
-        nombre_normalizado = f"{nombre.upper()} {apellido}"
-        puntos_dict[nombre_normalizado] = row['puntos']
-    
-    # Agregar puntos al dataframe
-    df['puntos'] = df[col_n].apply(lambda x: puntos_dict.get(x.upper(), 0))
-    # Ordenar por puntos (descendente)
-    df = df.sort_values('puntos', ascending=False).reset_index(drop=True) 
-
-    # --- MOVER LA LISTA AQUÍ (Antes de usarla en t1) ---
-    lista_fotos = [
-        "https://img2.51gt3.com/rac/racer/202503/cfc139b2b49e48cd80a436c00a71711d.png", # Lando Norris
-        "https://img.redbull.com/images/c_crop,x_914,y_1637,h_3171,w_3171/c_fill,w_308,h_308/q_auto:low,f_auto/redbullcom/2022/5/5/esxtfazwc5k0xntwv20i/max-verstappen-profile-pic", # Max Verstappen
-        "https://img2.51gt3.com/rac/racer/202503/4a3ecd96c2fd49508824cae497bfcec3.png?x-oss-process=style/_nowm", # Oscar Piastri 
-        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTpOdpFWHKoK6ZLKyWG760LL0wIjfvVz9jkwQ&s", # HGeorge Russell
-        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRSosRLhYZ0ZrhSkCM9w97fkgDMrY7yF7Uy-g&s", # Charles Leclerc -- Empiezo aquí 
-        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ9swwiCzY4ulkHmWcYjDC4JZm9d_n4G_zavQ&s", # Lewis Hamilton
-        "https://preview.redd.it/fun-fact-andrea-kimi-antonelli-might-be-the-first-f1-driver-v0-0uznvsuwu8ve1.jpeg?width=640&crop=smart&auto=webp&s=3c3ca7185c5a1f438fbbd051bd3b8c881abc4d06", # Kimi Antonelli (Mercedes)
-        "https://img2.51gt3.com/rac/racer/202503/1f1fd439e5344c7a83faf4a80d09486f.png", # Alexander Albon
-        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRMolyGxbEvjWbsApmtV5zJkofNtuZHxaxO-Q&s", # Carlos Sainz
-        "https://media.formula1.com/image/upload/f_auto,c_limit,q_75,w_1320/content/dam/fom-website/drivers/2024Drivers/alonso", # Fernando alonso
-        "https://img2.51gt3.com/rac/racer/202503/737aac3065d74096b767308cf4c3164e.png?x-oss-process=style/_nhd_en", # Nico Hulkenberg
-        "https://img2.51gt3.com/rac/racer/202503/12a32c8783f24aec8fce1d35138941a7.png", # Isack Hadjar 
-        "https://img2.51gt3.com/rac/racer/202503/b4e1b56f7f2a4c989f16787b26852cba.png?x-oss-process=style/_nhd_en", # Oliver Bearman
-        "https://img2.51gt3.com/rac/racer/202503/34d4155677ae4874aae0240f9b366cc3.png?x-oss-process=style/_nowm", # Esteban Ocon 
-        "https://img2.51gt3.com/rac/racer/202503/3a6b5ab450b040feb7cab3cb50e9a53f.png?x-oss-process=style/_nowm", # Liam Lawson
-        "https://media.formula1.com/image/upload/f_auto,c_limit,q_75,w_1320/content/dam/fom-website/drivers/2025Drivers/tsunoda", # Yuki Tsunoda
-        "https://img2.51gt3.com/rac/racer/202503/2869081e10e6412894446d1320c9cb44.png?x-oss-process=style/_nowm", #  Lance stroll
-        "https://media.formula1.com/image/upload/f_auto,c_limit,q_75,w_1320/content/dam/fom-website/drivers/2025Drivers/gasly", # Pierra Gasly
-        "https://www.grandprix.com.au/uploads/images/_driverProfile/394780/FOR-GP26-DRIVER_PROFILE-M-Gabriel_Bortoleto.webp", #  Gabriel Bortoleto
-        "https://static.wikia.nocookie.net/f1wikia/images/0/0f/Doohan2025.png/revision/latest?cb=20250728004628"  # Jack DOohan
-    ]
-
-    # 3. BLOQUE SUPERIOR
-    t1, t2, t3 = st.columns(3)
+# 2.2 VERIFICACIÓN DE ARCHIVOS, PODIO Y CARRUSEL:
+if os.path.exists(ruta_drivers_csv) and os.path.exists(ruta_teams_csv):
+    df_pilotos = pd.read_csv(ruta_drivers_csv)
+    df_escuderias = pd.read_csv(ruta_teams_csv)
     col_vacia_izq, t1, t2, t3, col_vacia_der = st.columns([1, 3, 3, 3, 1])
+    
+    # Configuración de la tarjeta para el lider del campeonato.
     with t1:
-        # Ahora sí, lista_fotos ya existe
-        foto_lider = lista_fotos[0]
+        nombre_lider = df_pilotos.iloc[0]["Nombre"] # Siempre mostrar el piloto que este en la primera posición del csv
+        img_html = obtener_img_html(obtener_ruta_foto(nombre_lider), width=100) # Usamos la función creada por IA para obtener la imagen del piloto
         st.markdown(f"""
             <div class="card">
-                <p style="color:red; margin:0; font-weight:bold; font-size: 20px">LÍDER CAMPEONATO</p>
-                <img src="{foto_lider}" width="100" style="border-radius: 50%; border: 3px solid #e10600; margin: 10px 0; object-fit: cover; aspect-ratio: 1/1;">
-                <h3>{df.iloc[0][col_n]}</h3>
+                <p style="color:red; margin:0; font-weight:bold; font-size: 20px">LÍDER CAMPEONATO ({temporada})</p>
+                {img_html}
+                <h3 style="margin:0;">{nombre_lider}</h3>
             </div>
         """, unsafe_allow_html=True)
-    
+    # Configuración de la tarjeta para la escudería líder del campeonato
     with t2:
-        # Metemos el nombre y la imagen dentro del mismo st.markdown para que hereden el estilo de la tarjeta
+        escuderia_lider = df_escuderias.iloc[0]["Escudería"] # Siempre mostrar la escudería que este en la primera posición del csv
         st.markdown(f'''
             <div class="card">
-                <p style="color:red; margin:0; font-weight:bold;font-size: 20px">ESCUDERÍA LÍDER</p>
-                <img src="https://upload.wikimedia.org/wikipedia/en/thumb/6/66/McLaren_Racing_logo.svg/3840px-McLaren_Racing_logo.svg.png" >
-                <h3 style="margin:10px 0;">McLaren</h3>
+                <p style="color:red; margin:0; font-weight:bold;font-size: 20px">ESCUDERÍA LÍDER ({temporada})</p>
+                <div style="height: 80px; display: flex; align-items: center; justify-content: center; margin: 10px 0;">
+                    <h2 style="color: #e10600; margin: 0; font-size: 50px;">🏎️</h2>
+                </div>
+                <h3 style="margin:10px 0;">{escuderia_lider}</h3>
             </div>
         ''', unsafe_allow_html=True)
-    
+    # Configuración de la tarjeta para el top 5 pilotos del campeonato
     with t3:
+        top_5_html = "" 
+        for idx in range(min(5, len(df_pilotos))): # Únicamente mostrará hasta el top 5 de pilotos e ira cambiando según la variable temporada
+            top_5_html += f"{idx+1}º: {df_pilotos.iloc[idx]["Nombre"]}<br>"
         st.markdown(f"""
             <div class="card">
                 <p style="color:red; margin:0; font-weight:bold; font-size: 20px"> TOP 5 PILOTOS</p>
-                <p style="text-align: center; padding-left: 9px; margin-top: 10px; font-size: 18.5px;font-weight: bold;">
-                    1º: {df.iloc[0][col_n]}<br>
-                    2º: {df.iloc[1][col_n]}<br>
-                    3º: {df.iloc[2][col_n]}<br>
-                    4º: {df.iloc[3][col_n]}<br>
-                    5º: {df.iloc[4][col_n]}
+                <p style="text-align: center; padding-left: 9px; margin-top: 10px; font-size: 18.5px; font-weight: bold; line-height: 1.4;">
+                    {top_5_html}
                 </p>
             </div>
         """, unsafe_allow_html=True)
 
-    # CARRUSEL DE PILOTOS
-    if 'carousel_index' not in st.session_state:
+    # Configuración del carrusel
+    if "carousel_index" not in st.session_state or st.session_state.get("ultima_temporada") != temporada: # Reiniciamos el carrusel al cambiar de temporada
         st.session_state.carousel_index = 0
-    
-    max_display = 4
-    total_pilotos = len(df)
-    
-    # Botones de navegación
+        st.session_state.ultima_temporada = temporada
+    max_display = 4 # Solamente hemos puesto 4 pilotos por fila pero se podrían añadir más, aunque puede que afecte a la estética de la página
+    total_pilotos = len(df_pilotos) 
     col_nav_left, col_nav_center, col_nav_right = st.columns([1, 3, 1])
     
+    # Navegación del carrusel mediante botones
     with col_nav_left:
         if st.button("◀ Anterior", key="prev_carousel"):
             st.session_state.carousel_index = max(0, st.session_state.carousel_index - max_display)
-    
     with col_nav_center:
         pilotos_mostrados = min(max_display, total_pilotos - st.session_state.carousel_index)
         inicio = st.session_state.carousel_index + 1
         fin = st.session_state.carousel_index + pilotos_mostrados
         st.markdown(f"<p style='text-align: center; color: #e10600;'><b>Pilotos {inicio} - {fin} de {total_pilotos}</b></p>", unsafe_allow_html=True)
-    
     with col_nav_right:
         if st.button("Siguiente ▶", key="next_carousel"):
             if st.session_state.carousel_index + max_display < total_pilotos:
                 st.session_state.carousel_index += max_display
     
-    # Mostrar tarjetas del carrusel
+    # El carrusel en sí
     m = st.columns(4)
-    
-    for i in range(min(max_display, total_pilotos - st.session_state.carousel_index)):
-        idx = st.session_state.carousel_index + i
-        nombre = df.iloc[idx][col_n]
-        puntos = int(df.iloc[idx]['puntos'])
-        foto_url = lista_fotos[idx] if idx < len(lista_fotos) else "https://www.formula1.com/etc/designs/fom-website/images/helmet-placeholder.png"
-        
+    for i in range(min(max_display, total_pilotos - st.session_state.carousel_index)): 
+        idx = st.session_state.carousel_index + i # Sumamos el índice del carrusel a la posición del piloto para mostrar el piloto correcto 
+        nombre = df_pilotos.iloc[idx]["Nombre"] # El nombre del piloto va cambiando con la ayuda del índice del carrusel 
+        puntos = int(df_pilotos.iloc[idx]["Puntos"]) # Lo mismo para los puntos
+        img_html = obtener_img_html(obtener_ruta_foto(nombre), width=120)
         with m[i]:
             st.markdown(f"""
                 <div class="card">
-                    <img src="{foto_url}" width="130" style="border-radius: 50%; border: 3px solid #e10600; margin-bottom: 10px; object-fit: cover; aspect-ratio: 1/1;">
-                    <p style="font-size: 18px;"><b>{nombre}</b></p>
-                    <p style="color:red; font-weight:bold;">{puntos} PTS</p>
+                    {img_html}
+                    <p style="font-size: 18px; margin-top:10px; margin-bottom: 5px;"><b>{nombre}</b></p>
+                    <p style="color:red; font-weight:bold; margin-bottom:0;">{puntos} PTS</p>
                 </div>
             """, unsafe_allow_html=True)
+else:
+    st.error(f"No se encontraron los archivos de datos para la temporada {temporada}.")
 
-    # 5. BLOQUE INFERIOR
-    st.divider()
-    b1, b2 = st.columns([1, 2])
-    with b1:
-        st.subheader("ÚLTIMA CARRERA:")
-        st.markdown("""
-        <div style="background-color: rgba(6, 104, 201, 0.2); padding: 15px; border-radius: 8px; color: white;">
-            <p style="font-size: 18px; font-weight: bold; margin: 0 0 10px 0;"><strong>GP DE ARABIA SAUDITA</strong></p>
-            <p style="margin: 0 0 15px 0;">Circuito de Jeddah Corniche</p>
-            <img src="https://upload.wikimedia.org/wikipedia/commons/b/be/Jeddah_Formula_E_Layout.png" style="width:91%; border-radius: 6px; margin-bottom: 10px;">
-            <p style="font-size: 13px; margin: 0; line-height: 1.5;">
-                <strong>Longitud:</strong> 6,174 km<br>
-                <strong>Curvas:</strong> 27<br>
-                <strong>Rectas Principales:</strong> 3 <br><br>
-                <strong>Sector 1:</strong> Curvas 1-4<br>
-                <strong>Sector 2:</strong> Curvas 5-22<br>
-                <strong>Sector 3:</strong> Curvas 23-27
-            </p>
-        </div>
-        """, unsafe_allow_html=True)
-    with b2:
-        st.subheader(" CLASIFICACIÓN DE ESCUDERÍAS:")
-        # Agrupar por escudería y sumar puntos
-        df_teams = df.groupby('Escuderia')['puntos'].sum().reset_index()
-        df_teams.columns = ['Escudería', 'Puntos']
-        df_teams = df_teams.sort_values('Puntos', ascending=False).reset_index(drop=True)
-        
-        # Filtrar por búsqueda si existe
-        df_teams_mostrar = df_teams.copy()
-        if busqueda:
-            df_teams_mostrar = df_teams[df_teams['Escudería'].str.contains(busqueda, case=False)]
-        
-        st.dataframe(df_teams_mostrar, width='stretch')
-    st.divider()
-    w1, w2 = st.columns(2)
-    with w1:
-        st.subheader(" PRÓXIMA CARRERA:")
-        st.markdown("""
-        <div style="background-color: rgba(6, 104, 201, 0.2); padding: 15px; border-radius: 8px; color: white;">
-            <p style="font-size: 18px; font-weight: bold; margin: 0 0 10px 0;"><strong>GP DE MIAMI</strong></p>
-            <p style="margin: 0 0 15px 0;">Circuito de Miami</p>
-            <img src="https://live-production.wcms.abc-cdn.net.au/80ad9122fd89085f00471568c43698d3?src" style="width:100%; border-radius: 6px; margin-bottom: 10px;">
-            <p style="font-size: 13px; margin: 0; line-height: 1.5;">
-                <strong>Longitud:</strong> 5,41 km<br>
-                <strong>Curvas:</strong> 19<br>
-                <strong>Rectas Principales:</strong> 3 (más de 320km/h)<br><br>
-                <strong>Sector 1:</strong> Curvas 1-8<br>
-                <strong>Sector 2:</strong> Curvas 9-16<br>
-                <strong>Sector 3:</strong> Curvas 17-19
-            </p>
-        </div>
-        """, unsafe_allow_html=True)   
-    with w2:
-        st.subheader("CALENDARIO DE CARRERAS:")
-        calendario_path= "data/clean/calendario.csv"
-        if os.path.exists(calendario_path):
-            df_calendario = pd.read_csv(calendario_path)
-            st.dataframe(df_calendario, use_container_width=True, hide_index=True, height=465)
-        else:
-            st.warning("Archivo calendario.csv no encontrado en data/clean/")
-    # 6. APARTADO DE AYUDA AL CLIENTE
-    st.divider()
-    
-    st.markdown('<p style="font-size: 24px; font-weight: bold; color: #e10600; margin-bottom: 20px;"> AYUDA AL CLIENTE</p>', unsafe_allow_html=True)
-    
-    # Creamos 3 columnas para organizar el soporte
-    h1, h2, h3 = st.columns(3)
-    
-    with h1:
-        st.markdown("""
-            <div style="background-color: #2b2b2b; padding: 20px; border-radius: 10px; border-top: 4px solid #e10600; min-height: 180px;">
-                <p style="font-weight: bold; font-size: 18px; margin-bottom: 10px;"> Soporte Técnico</p>
-                <p style="font-size: 14px; color: #cccccc;">¿Tienes problemas con la visualización de datos?</p>
-                <p style="font-size: 15px;"><b>Email:</b> soporte@f1livehub.com</p>
-                <p style="font-size: 15px;"><b>Horario:</b> L-V 09:00 - 18:00 CET</p>
-            </div>
-        """, unsafe_allow_html=True)
-        
-    with h2:
-        st.markdown("""
-            <div style="background-color: #2b2b2b; padding: 20px; border-radius: 10px; border-top: 4px solid #e10600; min-height: 180px;">
-                <p style="font-weight: bold; font-size: 18px; margin-bottom: 10px;"> Documentación</p>
-                <p style="font-size: 14px; color: #cccccc;">Consulta nuestras bibliografías para determinar el origen de nuestros datos.</p>
-                <a href="#" style="color: #e10600; text-decoration: none; font-weight: bold;">Ver Manual de Usuario →</a><br> 
-                <a href="#" style="color: #e10600; text-decoration: none; font-weight: bold;">API Reference (Ergast) →</a><br>
-            </div>
-        """, unsafe_allow_html=True) # Tendré que quitar el apartado de manual de usuario y añadir las referencias de a API
-        
-    with h3:
-        st.markdown("""
-            <div style="background-color: #2b2b2b; padding: 20px; border-radius: 10px; border-top: 4px solid #e10600; min-height: 180px;">
-                <p style="font-weight: bold; font-size: 18px; margin-bottom: 10px;"> Legal</p>
-                <p style="font-size: 14px; color: #cccccc;">Información sobre privacidad y términos de servicio.</p>
-                <ul style="font-size: 13px; padding-left: 20px; margin-top: 5px;">
-                    <li>La Página no recolecta información personal del usuario.</li>
-                </ul>
-            </div>
-        """, unsafe_allow_html=True)
-
-    # Footer final
+# 3. CIRCUITOS Y CALENDARIO DE CARRERAS:
+st.divider()
+b1, b2 = st.columns([1, 2])
+# 3.1 CIRCUITO DE LA ÚLTIMA CARRERA: 
+with b1:
+    st.subheader("ÚLTIMA CARRERA:")
     st.markdown("""
-        <div style="text-align: center; margin-top: 50px; padding: 20px; color: #555555; font-size: 12px;">
-            <p>© 2026 F1 Live Hub - Este sitio no es oficial y no está asociado de ninguna manera con el grupo de empresas de Fórmula 1.</p>
+    <div style="background-color: rgba(6, 104, 201, 0.2); padding: 15px; border-radius: 8px; color: white;">
+        <p style="font-size: 18px; font-weight: bold; margin: 0 0 10px 0;"><strong>GP DE ARABIA SAUDITA</strong></p>
+        <p style="margin: 0 0 15px 0;">Circuito de Jeddah Corniche</p>
+        <img src="https://upload.wikimedia.org/wikipedia/commons/b/be/Jeddah_Formula_E_Layout.png" style="width:91%; border-radius: 6px; margin-bottom: 10px;">
+        <p style="font-size: 13px; margin: 0; line-height: 1.5;">
+            <strong>Longitud:</strong> 6,174 km<br>
+            <strong>Curvas:</strong> 27<br>
+            <strong>Rectas Principales:</strong> 3 <br><br>
+            <strong>Sector 1:</strong> Curvas 1-4<br>
+            <strong>Sector 2:</strong> Curvas 5-22<br>
+            <strong>Sector 3:</strong> Curvas 23-27
+        </p>
+    </div>
+    """, unsafe_allow_html=True)
+# 3.2 TABLA DE CLASIFICACIÓN DE ESCUDERÍAS:
+with b2:
+    st.subheader(f" CLASIFICACIÓN DE ESCUDERÍAS ({temporada}):")
+    if os.path.exists(ruta_teams_csv):
+        df_teams_mostrar = df_escuderias.copy()
+        if busqueda:
+            df_teams_mostrar = df_escuderias[df_escuderias['Escudería'].str.contains(busqueda, case=False)]
+        st.dataframe(df_teams_mostrar, use_container_width=True, hide_index=True)
+
+st.divider() # Otra línea divisora, una vez más, es meramente decorativa
+w1, w2 = st.columns(2)
+# 3.3 CIRCUITO DE LA PRÓXIMA CARRERA:
+with w1:
+    st.subheader(" PRÓXIMA CARRERA:")
+    st.markdown("""
+    <div style="background-color: rgba(6, 104, 201, 0.2); padding: 15px; border-radius: 8px; color: white;">
+        <p style="font-size: 18px; font-weight: bold; margin: 0 0 10px 0;"><strong>GP DE MIAMI</strong></p>
+        <p style="margin: 0 0 15px 0;">Circuito de Miami</p>
+        <img src="https://live-production.wcms.abc-cdn.net.au/80ad9122fd89085f00471568c43698d3?src" style="width:100%; border-radius: 6px; margin-bottom: 10px;">
+        <p style="font-size: 13px; margin: 0; line-height: 1.5;">
+            <strong>Longitud:</strong> 5,41 km<br>
+            <strong>Curvas:</strong> 19<br>
+            <strong>Rectas Principales:</strong> 3 (más de 320km/h)<br><br>
+            <strong>Sector 1:</strong> Curvas 1-8<br>
+            <strong>Sector 2:</strong> Curvas 9-16<br>
+            <strong>Sector 3:</strong> Curvas 17-19
+        </p>
+    </div>
+    """, unsafe_allow_html=True)   
+# 3.4 CALENDARIO DE CARRERAS:
+with w2:
+    st.subheader("CALENDARIO DE CARRERAS:")
+    if os.path.exists(calendario_path):
+        df_calendario = pd.read_csv(calendario_path)
+        st.dataframe(df_calendario, use_container_width=True, hide_index=True, height=465)
+    else:
+        st.warning("Archivo calendario.csv no encontrado en data/clean/")
+
+# 4. AYUDA AL CLIENTE, SOPORTE TÉCNICO Y DOCUMENTACIÓN:
+st.divider()
+st.markdown('<p style="font-size: 24px; font-weight: bold; color: #e10600; margin-bottom: 20px;"> AYUDA AL CLIENTE</p>', unsafe_allow_html=True)
+h1, h2, h3 = st.columns(3)
+# 4.1 SOPORTE TÉCNICO
+with h1:
+    st.markdown("""
+        <div style="background-color: #2b2b2b; padding: 20px; border-radius: 10px; border-top: 4px solid #e10600; min-height: 180px;">
+            <p style="font-weight: bold; font-size: 18px; margin-bottom: 10px;"> Soporte Técnico</p>
+            <p style="font-size: 14px; color: #cccccc;">¿Tienes problemas con la visualización de datos?</p>
+            <p style="font-size: 15px;"><b>Email:</b> soporte@f1livehub.com</p>
+            <p style="font-size: 15px;"><b>Horario:</b> L-V 09:00 - 18:00 CET</p>
         </div>
     """, unsafe_allow_html=True)
-else:
-   st.error(" Ejecuta download.py en T2")
-
-
-
-
+# 4.2 DOCUMENTACIÓN Y APO
+with h2:
+    st.markdown("""
+        <div style="background-color: #2b2b2b; padding: 20px; border-radius: 10px; border-top: 4px solid #e10600; min-height: 180px;">
+            <p style="font-weight: bold; font-size: 18px; margin-bottom: 10px;"> Documentación y API</p>
+            <p style="font-size: 14px; color: #cccccc;">Consulta las referencias de datos del sistema.</p>
+            <a href="https://ergast.com/mrd/" target="_blank" style="color: #e10600; text-decoration: none; font-weight: bold;">API Reference (Ergast Motor Racing Data) →</a><br>
+        </div>
+    """, unsafe_allow_html=True)
+# 4.3 INFORMACIÓN LEGAL Y POLÍTICA DE PRIVACIDAD
+with h3:
+    st.markdown("""
+        <div style="background-color: #2b2b2b; padding: 20px; border-radius: 10px; border-top: 4px solid #e10600; min-height: 180px;">
+            <p style="font-weight: bold; font-size: 18px; margin-bottom: 10px;"> Legal</p>
+            <p style="font-size: 14px; color: #cccccc;">Información sobre privacidad y términos de servicio.</p>
+            <ul style="font-size: 13px; padding-left: 20px; margin-top: 5px;">
+                <li>La página no recolecta ni procesa información personal del usuario.</li>
+            </ul>
+        </div>
+    """, unsafe_allow_html=True)
+# 4.4 DISCLAIMER
+st.markdown("""
+    <div style="text-align: center; margin-top: 50px; padding: 20px; color: #555555; font-size: 12px;">
+        <p>© 2026 F1 Live Hub - Este sitio no es oficial y no está asociado de ninguna manera con el grupo de empresas de Fórmula 1.</p>
+    </div>
+""", unsafe_allow_html=True)
