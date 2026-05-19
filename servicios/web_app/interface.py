@@ -4,7 +4,9 @@ import pandas as pd
 import os
 import base64
 
-# 0. CONFIGURACIÓN DE LA PÁGINA Y HOJA DE ESTILOS (CSS)
+# 0. CONFIGURACIÓN DE LA PÁGINA Y TARJETAS:
+# He añadido una serie de comentarios para que así podamos entender mejor lo que hacen estos fragmentos de código HTML, los podeís ver a la derecha
+# y usarlos para guiaros en la creación de nuevas secciones
 st.set_page_config(page_title="F1 Live Hub", layout="wide")
 st.markdown("""
     <style>
@@ -53,7 +55,8 @@ st.markdown("""
     }
     </style>
     """, unsafe_allow_html=True)
-
+# Si los comentarios de arriba no os han sido útiles mandarme un whatsapp o dm por el gc, solamenete tener en cuenta que el código HTML es meramente decorativo
+# así que enfocaros en los fragmentos de python que es lo que realmente hace funcionar la página
 
 # FUNCIONES IA: Estas funciones han sido creadas por la IA para facilitarnos el uso de imágenes locales en streamlit y evitando conflictos con HTML
 def obtener_img_html(ruta_o_url, width=120):
@@ -270,7 +273,7 @@ with h2:
             <a href="https://ergast.com/mrd/" target="_blank" style="color: #e10600; text-decoration: none; font-weight: bold;">API Reference (Ergast Motor Racing Data) →</a><br>
         </div>
     """, unsafe_allow_html=True)
-# 4.3 INFORMACIÓN LEGAL Y POLÍTICA DE PRIVACIDAD
+# 4.3 INFORMACIÓN LEGAL Y POLÍTICA DE PRIVCIDAD
 with h3:
     st.markdown("""
         <div style="background-color: #2b2b2b; padding: 20px; border-radius: 10px; border-top: 4px solid #e10600; min-height: 180px;">
@@ -287,3 +290,5 @@ st.markdown("""
         <p>© 2026 F1 Live Hub - Este sitio no es oficial y no está asociado de ninguna manera con el grupo de empresas de Fórmula 1.</p>
     </div>
 """, unsafe_allow_html=True)
+# (Esta sección carece de tantos comentarios como otras porque es en su mayoría HTML y todo el código HTML esta comentado en la parte superior de la página
+# así que si tenéis dudas sobre la parte visual podéis revisar esos comentarios o preguntarme directamente)
