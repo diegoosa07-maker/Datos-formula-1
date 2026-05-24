@@ -9,3 +9,4 @@ Análisis de datos sobre las diferentes escuderias de la Formula 1. Entre estos 
 - Virtual env: python -m venv .venv
 - Activarlo: .venv\Scripts\activate
 - Librerías: pip install -r requirements.txt
+
