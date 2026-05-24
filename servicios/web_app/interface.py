@@ -53,24 +53,39 @@ st.markdown("""
         aspect-ratio: 1/1;                 /* Fuerza a que el ancho y el alto sean idénticos */
         display: block;                    /* Permite aplicar los márgenes automáticos */
     }
+
+    /* EDICIÓN REALIZADA: Configuración optimizada para los logos de las escuderías */
+    .team-logo {
+        border-radius: 8px;                /* Bordes ligeramente suavizados, no un círculo drástico */
+        border: 2px solid #e10600;         /* Borde rojo de F1 perimetral */
+        background-color: #ffffff;         /* Fondo blanco para homogeneizar falsos transparencias y dar contraste */
+        padding: 5px;                      /* Pequeño colchón interno para que el logo no toque el borde */
+        margin: 10px auto;                 /* Centrado horizontal */
+        object-fit: contain;               /* Escala y contiene el logo entero sin recortar texto */
+        display: block;                    /* Permite centrar con márgenes automáticos */
+        height: 90px;                      /* Altura fija controlada */
+        width: 140px;                      /* Anchura fija óptima para formatos panorámicos corporativos */
+    }
     </style>
     """, unsafe_allow_html=True)
-# Si los comentarios de arriba no os han sido útiles mandarme un whatsapp o dm por el gc, solamenete tener en cuenta que el código HTML es meramente decorativo
-# así que enfocaros en los fragmentos de python que es lo que realmente hace funcionar la página
 
 # FUNCIONES IA: Estas funciones han sido creadas por la IA para facilitarnos el uso de imágenes locales en streamlit y evitando conflictos con HTML
-def obtener_img_html(ruta_o_url, width=120):
+# EDICIÓN REALIZADA: Se añade el parámetro 'tipo' para discriminar entre estilos CSS de pilotos ('driver') y escuderías ('team')
+def obtener_img_html(ruta_o_url, width=120, tipo="driver"):
+    clase_css = "team-logo" if tipo == "team" else "driver-photo"
+    
     if ruta_o_url.startswith("http"):
-        return f'<img src="{ruta_o_url}" width="{width}" class="driver-photo">'
+        return f'<img src="{ruta_o_url}" width="{width}" class="{clase_css}">'
     if os.path.exists(ruta_o_url):
         with open(ruta_o_url, "rb") as image_file:
             encoded_string = base64.b64encode(image_file.read()).decode()
-            return f'<img src="data:image/png;base64,{encoded_string}" width="{width}" class="driver-photo">'     
+            return f'<img src="data:image/png;base64,{encoded_string}" width="{width}" class="{clase_css}">'     
     placeholder = "https://www.formula1.com/etc/designs/fom-website/images/helmet-placeholder.png"
-    return f'<img src="{placeholder}" width="{width}" class="driver-photo">'
-def obtener_ruta_foto(nombre_piloto):
+    return f'<img src="{placeholder}" width="{width}" class="{clase_css}">'
+
+def obtener_ruta_foto(nombre_entidad):
     carpeta_pics = "data/pics/"
-    nombre_archivo_base = os.path.join(carpeta_pics, nombre_piloto.strip())
+    nombre_archivo_base = os.path.join(carpeta_pics, nombre_entidad.strip())
     extensiones = ['.png', '.jpg', '.avif', '.webp', '.jpeg']
     for ext in extensiones:
         ruta_completa = f"{nombre_archivo_base}{ext}"
@@ -104,7 +119,7 @@ st.divider() # Línea divisora, es meramente decorativa, no tiene una función i
 # 2. SECCIÓN DE PODIUMS Y CARRUSEL DE PILOTOS
 # 2.1 CARGA DE DATOS DESDE CSV:
 ruta_drivers_csv = f"data/clean/driverspodium{temporada}.csv" # Cargamos los datos desde sus correspondientes csv, haciendo uso de la variable temporada
-ruta_teams_csv = f"data/clean/teamspodium{temporada}.csv" #     para cargar el año seleccionado en el menú desplegable
+ruta_teams_csv = f"data/clean/teamspodium{temporada}.csv" #    para cargar el año seleccionado en el menú desplegable
 calendario_path = "data/clean/calendario.csv"
 # Esos tres archivos contienen el podio para los pilotos, las escuderías y el calendario de carreras
 
@@ -117,7 +132,7 @@ if os.path.exists(ruta_drivers_csv) and os.path.exists(ruta_teams_csv):
     # Configuración de la tarjeta para el lider del campeonato.
     with t1:
         nombre_lider = df_pilotos.iloc[0]["Nombre"] # Siempre mostrar el piloto que este en la primera posición del csv
-        img_html = obtener_img_html(obtener_ruta_foto(nombre_lider), width=100) # Usamos la función creada por IA para obtener la imagen del piloto
+        img_html = obtener_img_html(obtener_ruta_foto(nombre_lider), width=100, tipo="driver") # Usamos la función creada por IA para obtener la imagen del piloto
         st.markdown(f"""
             <div class="card">
                 <p style="color:red; margin:0; font-weight:bold; font-size: 20px">LÍDER CAMPEONATO ({temporada})</p>
@@ -128,20 +143,25 @@ if os.path.exists(ruta_drivers_csv) and os.path.exists(ruta_teams_csv):
     # Configuración de la tarjeta para la escudería líder del campeonato
     with t2:
         escuderia_lider = df_escuderias.iloc[0]["Escudería"] # Siempre mostrar la escudería que este en la primera posición del csv
+        ruta_foto_escuderia = obtener_ruta_foto(escuderia_lider)
+        # EDICIÓN REALIZADA: Se pasa tipo="team" para que use las nuevas dimensiones rectangulares y el fondo contenedor limpio
+        img_escuderia_html = obtener_img_html(ruta_foto_escuderia, width=140, tipo="team")
+        
         st.markdown(f'''
             <div class="card">
                 <p style="color:red; margin:0; font-weight:bold;font-size: 20px">ESCUDERÍA LÍDER ({temporada})</p>
-                <div style="height: 80px; display: flex; align-items: center; justify-content: center; margin: 10px 0;">
-                    <h2 style="color: #e10600; margin: 0; font-size: 50px;">🏎️</h2>
+                <div style="height: 110px; display: flex; align-items: center; justify-content: center; margin: 5px 0;">
+                    {img_escuderia_html}
                 </div>
-                <h3 style="margin:10px 0;">{escuderia_lider}</h3>
+                <h3 style="margin:5px 0 0 0;">{escuderia_lider}</h3>
             </div>
         ''', unsafe_allow_html=True)
     # Configuración de la tarjeta para el top 5 pilotos del campeonato
     with t3:
         top_5_html = "" 
         for idx in range(min(5, len(df_pilotos))): # Únicamente mostrará hasta el top 5 de pilotos e ira cambiando según la variable temporada
-            top_5_html += f"{idx+1}º: {df_pilotos.iloc[idx]["Nombre"]}<br>"
+            top_5_html += f"{idx+1}º: {df_pilotos.iloc[idx]['Nombre']}<br>"
+            
         st.markdown(f"""
             <div class="card">
                 <p style="color:red; margin:0; font-weight:bold; font-size: 20px"> TOP 5 PILOTOS</p>
@@ -179,7 +199,7 @@ if os.path.exists(ruta_drivers_csv) and os.path.exists(ruta_teams_csv):
         idx = st.session_state.carousel_index + i # Sumamos el índice del carrusel a la posición del piloto para mostrar el piloto correcto 
         nombre = df_pilotos.iloc[idx]["Nombre"] # El nombre del piloto va cambiando con la ayuda del índice del carrusel 
         puntos = int(df_pilotos.iloc[idx]["Puntos"]) # Lo mismo para los puntos
-        img_html = obtener_img_html(obtener_ruta_foto(nombre), width=120)
+        img_html = obtener_img_html(obtener_ruta_foto(nombre), width=120, tipo="driver")
         with m[i]:
             st.markdown(f"""
                 <div class="card">
@@ -264,7 +284,7 @@ with h1:
             <p style="font-size: 15px;"><b>Horario:</b> L-V 09:00 - 18:00 CET</p>
         </div>
     """, unsafe_allow_html=True)
-# 4.2 DOCUMENTACIÓN Y APO
+# 4.2 DOCUMENTACIÓN Y API
 with h2:
     st.markdown("""
         <div style="background-color: #2b2b2b; padding: 20px; border-radius: 10px; border-top: 4px solid #e10600; min-height: 180px;">
@@ -290,5 +310,3 @@ st.markdown("""
         <p>© 2026 F1 Live Hub - Este sitio no es oficial y no está asociado de ninguna manera con el grupo de empresas de Fórmula 1.</p>
     </div>
 """, unsafe_allow_html=True)
-# (Esta sección carece de tantos comentarios como otras porque es en su mayoría HTML y todo el código HTML esta comentado en la parte superior de la página
-# así que si tenéis dudas sobre la parte visual podéis revisar esos comentarios o preguntarme directamente)
