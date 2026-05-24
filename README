@@ -1,14 +1,39 @@
 ## Proyecto Formula 1:  [Grupo Pendiente]
 Análisis de datos sobre las diferentes escuderias de la Formula 1. Entre estos datos se encuentra el historial de pilotos, historial de victorias, cambios en el modelo de coche, número de victorias, etc...
 
-## Estructura: 
-- src: Código.
-- Data: Datos en crudo (raw) y en limpio (clean).
+## INSTRUCCIONES
 
-## Instrucciones:
+# Configurar entornos
 - Virtual env: python -m venv .venv
 - Activarlo: .venv\Scripts\activate
 - Librerías: pip install -r requirements.txt
 
-## Para iniciar streamlit desde la terminal
-.venv\Scripts\python.exe -m streamlit run src/interface.py
+## SERVICIOS
+
+# Data Downloader (servicios/data_downloader/)
+- Descarga datos de la API openf1.org (pilotos, carreras, puntos, podiums)
+- Guarda en formato JSON en data/raw
+
+# Data Cleaner (servicios/data_cleaner/)
+- Procesa y limpia los datos crudos
+- Ejecuta pipeline de transformación
+- Lo sube como archivo CSV listo para analizar en data/clean
+
+# Web App (servicios/web_app/)
+- Interfaz Streamlit para visualizar datos
+- Para ejecutar desde la terminal: .venv\Scripts\python.exe -m streamlit run servicios/web_app/interface.py"
+
+## DOCKER
+Ejecutar con compose:
+```bash
+docker compose up
+```
+
+## ESTRUCTURA
+
+data/
+  raw/      → Datos directamente de la API
+  clean/    → CSV procesados de los JSON de data/raw/
+  pics/     → Imágenes de pilotos y equipos
+servicios/  → Cada servicio en su contenedor
+
