@@ -3,6 +3,7 @@ import streamlit as st
 import pandas as pd
 import os
 import base64
+import json
 
 # 0. CONFIGURACIÓN DE LA PÁGINA Y TARJETAS:
 # He añadido una serie de comentarios para que así podamos entender mejor lo que hacen estos fragmentos de código HTML, los podeís ver a la derecha
@@ -92,6 +93,66 @@ def obtener_ruta_foto(nombre_entidad):
         if os.path.exists(ruta_completa):
             return ruta_completa  
     return "https://www.formula1.com/etc/designs/fom-website/images/helmet-placeholder.png"
+
+# Diccionario de logos de equipos
+TEAM_LOGOS = {
+    "Alpine": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4a/BWT_Alpine_F1_Team_Logo.png/500px-BWT_Alpine_F1_Team_Logo.png",
+    "Aston Martin": "https://upload.wikimedia.org/wikipedia/en/1/15/Aston_Martin_Aramco_2024_logo.png",
+    "Ferrari": "https://upload.wikimedia.org/wikipedia/en/thumb/d/df/Scuderia_Ferrari_HP_logo_24.svg/500px-Scuderia_Ferrari_HP_logo_24.svg.png",
+    "McLaren": "data/pics/McLaren.png",
+    "Haas F1 Team": "https://static.wikia.nocookie.net/logopedia/images/c/c3/HaasF1Team2016ver.jpg/revision/latest/scale-to-width-down/250?cb=20260322174034",
+    "Kick Sauber": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/94/Logo_sauber_2023.jpg/500px-Logo_sauber_2023.jpg",
+    "Racing Bulls": "https://upload.wikimedia.org/wikipedia/en/thumb/2/2b/VCARB_F1_logo.svg/500px-VCARB_F1_logo.svg.png",
+    "Williams": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/12/Atlassian_Williams_F1_Team_logo.svg/500px-Atlassian_Williams_F1_Team_logo.svg.png",
+    "Red Bull Racing": "data/pics/Red Bull Racing.png"
+}
+
+def obtener_logo_equipo(nombre_equipo):
+    """Obtiene el logo de un equipo desde el diccionario o retorna la ruta local"""
+    return TEAM_LOGOS.get(nombre_equipo.strip(), f"data/pics/{nombre_equipo.strip()}.png")
+
+# FUNCIONES PARA GESTIONAR DATOS DE ESCUDERÍAS Y PILOTOS:
+def cargar_pilotos_por_escuderia(temporada):
+    """Carga el JSON de pilotos y crea un diccionario escudería -> pilotos"""
+    ruta_json = f"data/raw/info/pilotos{temporada}_info.json"
+    pilotos_por_escuderia = {}
+    
+    if os.path.exists(ruta_json):
+        with open(ruta_json, 'r', encoding='utf-8') as f:
+            for linea in f:
+                try:
+                    piloto_data = json.loads(linea)
+                    escuderia = piloto_data.get('team_name', '')
+                    nombre_completo = piloto_data.get('full_name', '')
+                    
+                    if escuderia and nombre_completo:
+                        if escuderia not in pilotos_por_escuderia:
+                            pilotos_por_escuderia[escuderia] = {
+                                'pilotos': [],
+                                'color_equipo': piloto_data.get('team_colour', '')
+                            }
+                        pilotos_por_escuderia[escuderia]['pilotos'].append(nombre_completo)
+                except json.JSONDecodeError:
+                    continue
+    
+    return pilotos_por_escuderia
+
+def obtener_puntos_escuderia(df_pilotos, pilotos_escuderia):
+    """Calcula los puntos totales y retorna datos de pilotos con sus puntos"""
+    pilotos_con_puntos = []
+    puntos_totales = 0
+    
+    for nombre_piloto in pilotos_escuderia:
+        piloto_en_df = df_pilotos[df_pilotos['Nombre'] == nombre_piloto]
+        if not piloto_en_df.empty:
+            puntos = int(piloto_en_df.iloc[0]['Puntos'])
+            pilotos_con_puntos.append({
+                'nombre': nombre_piloto,
+                'puntos': puntos
+            })
+            puntos_totales += puntos
+    
+    return pilotos_con_puntos, puntos_totales
 
 
 # 1. ESTRUCTURA PRINCIPAL: TÍTULO, LOGO, SELECTOR DE TEMPORADAS Y BARRA DE BUSQUEDA
@@ -211,7 +272,79 @@ if os.path.exists(ruta_drivers_csv) and os.path.exists(ruta_teams_csv):
 else:
     st.error(f"No se encontraron los archivos de datos para la temporada {temporada}.")
 
-# 3. CIRCUITOS Y CALENDARIO DE CARRERAS:
+# 3. PÁGINA DE DETALLE DE ESCUDERÍAS:
+st.divider()
+st.markdown('<p style="font-size: 24px; font-weight: bold; color: #e10600; margin-bottom: 20px;"> DETALLE DE ESCUDERÍAS</p>', unsafe_allow_html=True)
+
+# Cargar datos de pilotos por escudería
+pilotos_por_escuderia = cargar_pilotos_por_escuderia(temporada)
+
+# Selector de escudería
+col_selector_equipo, col_vacio = st.columns([2, 3])
+with col_selector_equipo:
+    escuderias_disponibles = sorted(df_escuderias['Escudería'].tolist())
+    escuderia_seleccionada = st.selectbox(
+        "Selecciona una escudería",
+        escuderias_disponibles,
+        index=0,
+        key=f"select_team_{temporada}"
+    )
+
+# Mostrar detalle de la escudería seleccionada
+if escuderia_seleccionada and escuderia_seleccionada in pilotos_por_escuderia:
+    datos_escuderia = pilotos_por_escuderia[escuderia_seleccionada]
+    pilotos_con_puntos, puntos_totales = obtener_puntos_escuderia(
+        df_pilotos, 
+        datos_escuderia['pilotos']
+    )
+    
+    # Información general de la escudería
+    col_info_1, col_info_2 = st.columns(2)
+    
+    with col_info_1:
+        color_hex = datos_escuderia['color_equipo'] if datos_escuderia['color_equipo'] else "2b2b2b"
+        ruta_logo_team = obtener_logo_equipo(escuderia_seleccionada)
+        img_logo_html = obtener_img_html(ruta_logo_team, width=140, tipo="team")
+        st.markdown(f"""
+            <div style="background-color: #2b2b2b; padding: 20px; border-radius: 10px; border-left: 5px solid #{color_hex}; text-align: center; height: 240px; display: flex; flex-direction: column; justify-content: center; align-items: center;">
+                <p style="color: #{color_hex}; font-size: 18px; font-weight: bold; margin: 0 0 10px 0;">ESCUDERÍA</p>
+                <h2 style="margin: 0; color: white; margin-bottom: 10px;">{escuderia_seleccionada}</h2>
+                <div style="display: flex; justify-content: center; align-items: center; height: 100px;">
+                    {img_logo_html}
+                </div>
+            </div>
+        """, unsafe_allow_html=True)
+    
+    with col_info_2:
+        st.markdown(f"""
+            <div style="background-color: #2b2b2b; padding: 20px; border-radius: 10px; border-left: 5px solid #e10600; text-align: center; height: 240px; display: flex; flex-direction: column; justify-content: center; align-items: center;">
+                <p style="color: #e10600; font-size: 18px; font-weight: bold; margin: 0 0 10px 0;">PUNTOS TOTALES</p>
+                <h1 style="margin: 0; color: white; font-size: 48px;">{int(puntos_totales)}</h1>
+            </div>
+        """, unsafe_allow_html=True)
+    
+    # Detalle de pilotos
+    st.subheader("👤 PILOTOS DEL EQUIPO")
+    col_piloto_1, col_piloto_2 = st.columns(2)
+    
+    for idx, piloto_info in enumerate(pilotos_con_puntos):
+        col_actual = col_piloto_1 if idx % 2 == 0 else col_piloto_2
+        with col_actual:
+            ruta_foto = obtener_ruta_foto(piloto_info['nombre'])
+            img_html = obtener_img_html(ruta_foto, width=120, tipo="driver")
+            
+            st.markdown(f"""
+                <div class="card">
+                    {img_html}
+                    <h3 style="margin-top: 10px; margin-bottom: 5px;">{piloto_info['nombre']}</h3>
+                    <p style="color: #e10600; font-weight: bold; font-size: 20px; margin: 10px 0;">{int(piloto_info['puntos'])} PTS</p>
+                </div>
+            """, unsafe_allow_html=True)
+    
+elif escuderia_seleccionada:
+    st.warning(f"No se encontró información sobre los pilotos de {escuderia_seleccionada}")
+
+# 4. CIRCUITOS Y CALENDARIO DE CARRERAS:
 st.divider()
 b1, b2 = st.columns([1, 2])
 # 3.1 CIRCUITO DE LA ÚLTIMA CARRERA: 
@@ -270,11 +403,11 @@ with w2:
     else:
         st.warning("Archivo calendario.csv no encontrado en data/clean/")
 
-# 4. AYUDA AL CLIENTE, SOPORTE TÉCNICO Y DOCUMENTACIÓN:
+# 5. AYUDA AL CLIENTE, SOPORTE TÉCNICO Y DOCUMENTACIÓN:
 st.divider()
 st.markdown('<p style="font-size: 24px; font-weight: bold; color: #e10600; margin-bottom: 20px;"> AYUDA AL CLIENTE</p>', unsafe_allow_html=True)
 h1, h2, h3 = st.columns(3)
-# 4.1 SOPORTE TÉCNICO
+# 6.1 SOPORTE TÉCNICO
 with h1:
     st.markdown("""
         <div style="background-color: #2b2b2b; padding: 20px; border-radius: 10px; border-top: 4px solid #e10600; min-height: 180px;">
@@ -284,7 +417,7 @@ with h1:
             <p style="font-size: 15px;"><b>Horario:</b> L-V 09:00 - 18:00 CET</p>
         </div>
     """, unsafe_allow_html=True)
-# 4.2 DOCUMENTACIÓN Y API
+# 6.2 DOCUMENTACIÓN Y API
 with h2:
     st.markdown("""
         <div style="background-color: #2b2b2b; padding: 20px; border-radius: 10px; border-top: 4px solid #e10600; min-height: 180px;">
@@ -293,7 +426,7 @@ with h2:
             <a href="https://ergast.com/mrd/" target="_blank" style="color: #e10600; text-decoration: none; font-weight: bold;">API Reference (Ergast Motor Racing Data) →</a><br>
         </div>
     """, unsafe_allow_html=True)
-# 4.3 INFORMACIÓN LEGAL Y POLÍTICA DE PRIVCIDAD
+# 6.3 INFORMACIÓN LEGAL Y POLÍTICA DE PRIVCIDAD
 with h3:
     st.markdown("""
         <div style="background-color: #2b2b2b; padding: 20px; border-radius: 10px; border-top: 4px solid #e10600; min-height: 180px;">
