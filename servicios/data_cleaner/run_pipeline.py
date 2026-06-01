@@ -19,12 +19,7 @@ if __name__ == "__main__":
     
     # Lista ordenada de tus scripts de limpieza
     pipeline = [
-        "Archivo 1.py",
-        "archivo 2.py",
-        "Archivo 3.py",
-        "Archivo 4.py",
         "Podium 2023.py",
-        "Archivo 6.py",
         "Podium 2024.py",
         "Podium 2025.py",
         "Podium team 2023.py",
