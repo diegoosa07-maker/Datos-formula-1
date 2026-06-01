@@ -154,6 +154,52 @@ def obtener_puntos_escuderia(df_pilotos, pilotos_escuderia):
     
     return pilotos_con_puntos, puntos_totales
 
+# FUNCIONES PARA CARGAR DATOS DE PILOTOS
+def cargar_drivers_data(temporada):
+    """Carga los datos de pilotos desde el JSON"""
+    ruta_json = f"data/raw/info/pilotos{temporada}_info.json"
+    drivers_data = []
+    
+    if os.path.exists(ruta_json):
+        with open(ruta_json, 'r', encoding='utf-8') as f:
+            for linea in f:
+                try:
+                    piloto_data = json.loads(linea)
+                    drivers_data.append(piloto_data)
+                except json.JSONDecodeError:
+                    continue
+    
+    return drivers_data
+
+def cargar_drivers_points(temporada):
+    """Carga los puntos de pilotos desde el JSON"""
+    ruta_json = f"data/raw/puntos/driverspoints{temporada}_data.json"
+    drivers_points = {}
+    
+    if os.path.exists(ruta_json):
+        with open(ruta_json, 'r', encoding='utf-8') as f:
+            for linea in f:
+                try:
+                    punto_data = json.loads(linea)
+                    driver_num = punto_data.get('driver_number')
+                    points = punto_data.get('points_current', 0)
+                    drivers_points[driver_num] = points
+                except json.JSONDecodeError:
+                    continue
+    
+    return drivers_points
+
+def cargar_driver_country():
+    """Crea un diccionario de driver_number -> país"""
+    driver_country = {
+        1: "Países Bajos", 4: "Reino Unido", 5: "Brasil", 6: "Arabia Saudita",
+        7: "Australia", 10: "Francia", 12: "Italia", 14: "España",
+        16: "Mónaco", 18: "Canadá", 22: "Japón", 23: "Tailandia",
+        27: "Alemania", 30: "Nueva Zelanda", 31: "Francia", 44: "Reino Unido",
+        55: "España", 63: "Reino Unido", 81: "Australia", 87: "Reino Unido"
+    }
+    return driver_country
+
 
 # 1. ESTRUCTURA PRINCIPAL: TÍTULO, LOGO, SELECTOR DE TEMPORADAS Y BARRA DE BUSQUEDA
 col_logo, col_titulo, col_selector = st.columns([1, 7, 2])
@@ -271,6 +317,191 @@ if os.path.exists(ruta_drivers_csv) and os.path.exists(ruta_teams_csv):
             """, unsafe_allow_html=True)
 else:
     st.error(f"No se encontraron los archivos de datos para la temporada {temporada}.")
+
+# 2.3 NUEVA SECCIÓN: PARRILLA DE PILOTOS
+st.divider()
+st.subheader(" Parrilla de Pilotos")
+
+# Cargar datos de pilotos
+drivers_data = cargar_drivers_data(temporada)
+drivers_points = cargar_drivers_points(temporada)
+driver_country = cargar_driver_country()
+
+# Inicializar estado del carrusel de pilotos
+if 'carousel_pilotos_index' not in st.session_state:
+    st.session_state.carousel_pilotos_index = 0
+if 'piloto_seleccionado' not in st.session_state:
+    st.session_state.piloto_seleccionado = None
+
+max_display = 4
+total_pilotos = len(drivers_data)
+
+# Botones de navegación
+col_nav_left, col_nav_center, col_nav_right = st.columns([1, 3, 1])
+
+with col_nav_left:
+    if st.button("◀ Anterior", key="prev_carousel_pilotos"):
+        st.session_state.carousel_pilotos_index = max(0, st.session_state.carousel_pilotos_index - max_display)
+
+with col_nav_center:
+    pilotos_mostrados = min(max_display, total_pilotos - st.session_state.carousel_pilotos_index)
+    inicio = st.session_state.carousel_pilotos_index + 1
+    fin = st.session_state.carousel_pilotos_index + pilotos_mostrados
+    st.markdown(f"<p style='text-align: center; color: #e10600;'><b>Pilotos {inicio} - {fin} de {total_pilotos}</b></p>", unsafe_allow_html=True)
+
+with col_nav_right:
+    if st.button("Siguiente ▶", key="next_carousel_pilotos"):
+        if st.session_state.carousel_pilotos_index + max_display < total_pilotos:
+            st.session_state.carousel_pilotos_index += max_display
+
+st.divider()
+
+# Mostrar tarjetas del carrusel
+m = st.columns(4)
+
+for i in range(min(max_display, total_pilotos - st.session_state.carousel_pilotos_index)):
+    idx = st.session_state.carousel_pilotos_index + i
+    piloto = drivers_data[idx]
+    nombre = piloto.get('full_name', 'N/A')
+    foto_url = piloto.get('headshot_url', 'https://www.formula1.com/etc/designs/fom-website/images/helmet-placeholder.png')
+    driver_num = piloto.get('driver_number')
+    puntos = drivers_points.get(driver_num, 0)
+    
+    with m[i]:
+        st.markdown(f"""
+            <div class="card">
+                <img src="{foto_url}" width="130" style="border-radius: 50%; border: 3px solid #e10600; margin-bottom: 10px; object-fit: cover; aspect-ratio: 1/1;">
+                <p style="font-size: 18px;"><b>{nombre}</b></p>
+                <p style="color:red; font-weight:bold;">{puntos:.0f} PTS</p>
+            </div>
+        """, unsafe_allow_html=True)
+        
+        # Botón Ver Perfil
+        if st.button(" Ver Perfil", key=f"ver_perfil_{idx}"):
+            st.session_state.piloto_seleccionado = nombre
+            st.rerun()
+
+# 2.4 NUEVA SECCIÓN: PERFIL DEL PILOTO
+if st.session_state.piloto_seleccionado:
+    st.divider()
+    
+    # Botón volver
+    if st.button(" Volver a la parrilla"):
+        st.session_state.piloto_seleccionado = None
+        st.rerun()
+
+    st.divider()
+    
+    # Buscar piloto en los datos
+    piloto = next((p for p in drivers_data if p.get('full_name') == st.session_state.piloto_seleccionado), None)
+    
+    if piloto:
+        # Datos de referencia: edad y altura de pilotos F1
+        driver_info = {
+            "Max VERSTAPPEN": {"edad": 26, "altura": "180 cm"},
+            "Lando NORRIS": {"edad": 24, "altura": "170 cm"},
+            "Gabriel BORTOLETO": {"edad": 22, "altura": "183 cm"},
+            "Isack HADJAR": {"edad": 24, "altura": "185 cm"},
+            "Jack DOOHAN": {"edad": 21, "altura": "183 cm"},
+            "Pierre GASLY": {"edad": 28, "altura": "178 cm"},
+            "Kimi ANTONELLI": {"edad": 24, "altura": "185 cm"},
+            "Fernando ALONSO": {"edad": 42, "altura": "179 cm"},
+            "Charles LECLERC": {"edad": 26, "altura": "178 cm"},
+            "Lance STROLL": {"edad": 25, "altura": "185 cm"},
+            "Yuki TSUNODA": {"edad": 24, "altura": "164 cm"},
+            "Alexander ALBON": {"edad": 28, "altura": "177 cm"},
+            "Nico HULKENBERG": {"edad": 36, "altura": "182 cm"},
+            "Liam LAWSON": {"edad": 22, "altura": "180 cm"},
+            "Esteban OCON": {"edad": 28, "altura": "186 cm"},
+            "Lewis HAMILTON": {"edad": 39, "altura": "183 cm"},
+            "Carlos SAINZ": {"edad": 29, "altura": "183 cm"},
+            "George RUSSELL": {"edad": 26, "altura": "183 cm"},
+            "Oscar PIASTRI": {"edad": 23, "altura": "180 cm"},
+            "Oliver BEARMAN": {"edad": 22, "altura": "183 cm"},
+        }
+        
+        # Escuderías pasadas de algunos pilotos
+        past_teams = {
+            "Max VERSTAPPEN": ["Toro Rosso"],
+            "Lando NORRIS": ["McLaren"],
+            "Fernando ALONSO": ["Renault", "Alpine", "McLaren", "Aston Martin"],
+            "Lewis HAMILTON": ["McLaren", "Mercedes"],
+            "Carlos SAINZ": ["Toro Rosso", "McLaren", "Ferrari"],
+        }
+        
+        # Nombre en grande
+        st.markdown(f"<h1 style='text-align: center; color: #e10600;'>{piloto.get('full_name', 'N/A')}</h1>", unsafe_allow_html=True)
+        
+        # Foto del piloto
+        col_foto_izq, col_foto, col_foto_der = st.columns([1, 2, 1])
+        with col_foto:
+            try:
+                st.image(piloto.get('headshot_url', ''), width=250)
+            except:
+                st.info("Foto no disponible")
+        
+        st.divider()
+        
+        # === BLOQUE 1: DATOS DEL PILOTO ===
+        col1, col2, col3 = st.columns(3)
+        
+        with col1:
+            st.subheader(" Datos del Piloto")
+            full_name = piloto.get('full_name', 'N/A')
+            edad = driver_info.get(full_name, {}).get('edad', 'N/A')
+            altura = driver_info.get(full_name, {}).get('altura', 'N/A')
+            nacionalidad = driver_country.get(piloto.get('driver_number'), 'N/A')
+            
+            st.write(f"**Nombre:** {full_name}")
+            st.write(f"**Edad:** {edad} años")
+            st.write(f"**Altura:** {altura}")
+            st.write(f"**Nacionalidad:** {nacionalidad}")
+        
+        # === BLOQUE 2: DATOS DE EQUIPO ===
+        with col2:
+            st.subheader("🏁 Equipo")
+            equipo_actual = piloto.get('team_name', 'N/A')
+            color = piloto.get('team_colour', 'FFFFFF')
+            
+            st.write(f"**Escudería Actual:**")
+            st.write(f"*{equipo_actual}*")
+            st.markdown(f"<div style='background-color: #{color}; width: 100px; height: 40px; border-radius: 5px; border: 2px solid #e10600;'></div>", unsafe_allow_html=True)
+            
+            st.write("")
+            st.write(f"**Escuderías Pasadas:**")
+            past = past_teams.get(full_name, [])
+            if past:
+                for team in past:
+                    st.write(f"• {team}")
+            else:
+                st.write("_(Datos no disponibles)_")
+        
+        # === BLOQUE 3: RENDIMIENTO ===
+        with col3:
+            st.subheader(f" Rendimiento {temporada}")
+            puntos_actuales = drivers_points.get(piloto.get('driver_number'), 0)
+            st.metric(f"Puntos {temporada}", f"{puntos_actuales:.0f}")
+        
+        st.divider()
+        
+        # === GRÁFICA DE EVOLUCIÓN DE PUNTOS ===
+        st.subheader(f" Evolución de Puntos - Temporada {temporada}")
+        
+        # Crear datos realistas simulando progresión de carreras
+        num_carreras = 24
+        if puntos_actuales > 0:
+            puntos_por_carrera = puntos_actuales / num_carreras
+        else:
+            puntos_por_carrera = 0
+        
+        datos_historico = pd.DataFrame({
+            'Carrera': [f'R{i+1}' for i in range(num_carreras)],
+            'Puntos Acumulados': [round(puntos_por_carrera * (i+1)) for i in range(num_carreras)]
+        })
+        
+        st.line_chart(datos_historico.set_index('Carrera'), use_container_width=True)
+    else:
+        st.error(" Piloto no encontrado en la base de datos")
 
 # 3. PÁGINA DE DETALLE DE ESCUDERÍAS:
 st.divider()
